@@ -1,0 +1,179 @@
+﻿<!-- Responsive top menu -->
+<div class="ui fixed inverted main menu">
+    <div class="ui container">
+        <a class="launch icon item sidebar-toggle">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</div>
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">Продукция</h2>
+
+    <!--<div class="right menu">
+        <a class="ui active item" href="">
+            Inventory
+        </a>
+        <a class="ui item" href="products/gallery.html">
+            Gallery
+        </a>
+    </div>-->
+</div>
+
+<div class="nine wide products column">
+    <div class="ui form">
+        <div class="ui basic segment">
+            <div class="two fields">
+                <div class="field">
+                    <select class="ui fluid normal dropdown"
+                            multiple
+                            ng-model="vm.selectedTobacco"
+                            ng-options="tobacco.Id as tobacco.Name for tobacco in vm.tobacco"
+                            ng-change="vm.update()"
+                            tabindex="0"></select>
+                </div>
+
+                <div class="field">
+                    <div class="ui icon input">
+                        <input type="text" placeholder="Найти...">
+                        <i class="search icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="seven wide products column">
+    <div class="ui basic right aligned segment">
+        <div class="ui blue import-export buttons">
+            <div class="ui button">Импорт / Экспорт</div>
+            <div class="ui floating dropdown icon button" tabindex="0">
+                <i class="dropdown icon"></i>
+                <div class="menu transition hidden" tabindex="-1">
+                    <div class="item">Импорт</div>
+                    <div class="item">
+                        <i class="dropdown icon"></i>
+                        <span class="text">Экспорт</span>
+                        <div class="menu transition hidden">
+                            <div class="header">Format</div>
+                            <div class="item">PDF</div>
+                            <div class="item">CSV</div>
+                            <div class="item">Export</div>
+                            <div class="divider"></div>
+                            <div class="header">Apps</div>
+                            <div class="item">Quickbooks</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="ui primary button" ng-click="vm.openModal(null, false)">Добавить табак</button>
+    </div>
+</div>
+
+<table class="ui very basic striped celled table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Название</th>
+            <th>Категория</th>
+            <th>Крепкость</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="obj in vm.tobaccoList">
+            <td>{{ obj.Id }}</td>
+            <td>{{ obj.Name }}</td>
+            <td>{{ obj.Category.Name }}</td>
+            <td>{{ obj.Category.Severity }}</td>
+            <td class="center aligned">
+                <div class="ui icon buttons">
+                    <button class="ui orange large button" ng-click="vm.openModal(obj, true)">
+                        <i class="edit icon"></i>
+                    </button>
+                    <button class="ui red lrage button" ng-click="vm.delete(obj.Id)">
+                        <i class="delete icon"></i>
+                    </button>
+                </div>
+            </td>
+            <!--<td>
+                <i class="violet facebook square icon"></i>
+                <i class="blue twitter icon"></i>
+                <i class="red pinterest icon"></i>
+            </td>-->
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <th colspan="5">
+                <div class="ui right floated pagination menu">
+                    <a class="icon item">
+                        <i class="left chevron icon"></i>
+                    </a>
+                    <a class="item">1</a>
+                    <a class="item">2</a>
+                    <a class="item">3</a>
+                    <a class="item">4</a>
+                    <a class="icon item">
+                        <i class="right chevron icon"></i>
+                    </a>
+                </div>
+            </th>
+        </tr>
+    </tfoot>
+</table>
+
+<modal ng-model="vm.showModal">
+    <i class="close icon" ng-click="vm.closeModal()"></i>
+    <div class="header">
+        Добавление тобака
+    </div>
+    <div class="content">
+        <div class="right">
+            <form class="ui large form" name="addTobaccoForm" novalidate>
+                <div class="two fields" ng-class="{'error': addTobaccoForm.username.$dirty && addTobaccoForm.username.$invalid}">
+                    <div class="field">
+                        <label>Название табака</label>
+                        <input type="text" name="name" placeholder="Name" data-ng-model="vm.currentEditTobacco.Name" required tabindex="0" />
+                        <span ng-show="addTobaccoForm.name.$touched && addTobaccoForm.name.$invalid" class="ui red pointing above ui label">Название</span>
+                    </div>
+
+                    <div class="field">
+                        <label>Категория</label>
+                        <dropdown name="categoryName" open="false"
+                                  ng-model="vm.currentEditTobacco.Category.Name"
+                                  required>
+                            <dropdown-group data-value="model.Id" data-title="model.Name" ng-repeat="model in vm.tobacco track by model.Id">{{model.Name}}</dropdown-group>
+                        </dropdown>
+                        <span ng-show="addTobaccoForm.categoryName.$touched && addTobaccoForm.categoryName.$invalid" class="ui red pointing above ui label">Категория табака</span>
+                    </div>
+                </div>
+
+                <div class="field" ng-class="{'error': addTobaccoForm.categoryName.$dirty && addTobaccoForm.categoryName.$invalid}">
+                    <div class="ui input">
+                        
+                    </div>
+                </div>
+
+                <!--<div class="ui message" ng-class="vm.message.status == 'error' ? 'error' : 'success'"
+                     style="display:block;"
+                     data-ng-show="vm.message.code != ''">{{ vm.message.status }}: {{ vm.message.code }}</div>-->
+
+            </form>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="one fluid ui buttons">
+            <button type="submit" 
+                    ng-disabled="addTobaccoForm.$invalid || !addTobaccoForm.$dirty" 
+                    ng-click="vm.insertTobaccoStyle()" 
+                    class="ui positive right labeled icon button">
+                Добавить
+            </button>
+        </div>
+    </div>
+</modal>
+
+<script src="Content/js/admin.js"></script> 

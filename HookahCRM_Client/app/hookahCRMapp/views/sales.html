@@ -1,0 +1,105 @@
+﻿<!-- Responsive top menu -->
+<div class="ui fixed inverted main menu">
+    <div class="ui container">
+        <a class="launch icon item sidebar-toggle">
+            <i class="sidebar icon"></i>
+        </a>
+    </div>
+</div>
+
+<div class="ui secondary pointing fluid menu">
+    <h2 class="ui header">{{ vm.controllerName }}</h2>
+
+    <!--<div class="right menu">
+        <a class="ui active item">
+            Reports
+        </a>
+        <a class="ui disabled item">
+            Transactions
+        </a>
+    </div>-->
+</div>
+
+<div class="four wide sales column">
+    <div class="ui secondary vertical menu">
+        <a class="active item" href="#/sales/year/2016">
+            За год
+        </a>
+        <div class="ui dropdown item">
+            <i class="dropdown icon"></i>
+            За месяц
+            <div class="menu">
+                <div class="header">Выбор месяца</div>
+                <a class="item" href="#/sales/month/1">Январь</a>
+                <a class="item" href="#/sales/month/2">Февраль</a>
+                <a class="item" href="#/sales/month/3">Март</a>
+                <a class="item" href="#/sales/month/4">Апрель</a>
+                <a class="item" href="#/sales/month/5">Май</a>
+                <a class="item" href="#/sales/month/6">Июнь</a>
+                <a class="item" href="#/sales/month/7">Июль</a>
+                <a class="item" href="#/sales/month/8">Август</a>
+                <a class="item" href="#/sales/month/9">Сентябрь</a>
+                <a class="item" href="#/sales/month/10">Октябрь</a>
+                <a class="item" href="#/sales/month/11">Ноябрь</a>
+                <a class="item" href="#/sales/month/12">Декабрь</a>
+            </div>
+        </div>
+        <a class="item" href="#/sales/now">
+            За сегодня
+        </a>
+        <!--<a class="disabled item">
+            Sales Report #4
+        </a>-->
+    </div>
+</div>
+
+<div class="twelve wide sales column">
+
+    <canvas id="line" class="chart chart-line" chart-data="vm.data"
+            chart-labels="vm.labels" chart-legend="vm.true" chart-series="vm.series"></canvas>
+
+    <!--<table class="ui table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Дата</th>
+                <th>E-mail</th>
+                <th>Shipped</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Customer #1</td>
+                <td>September 14, 2013</td>
+                <td>customer1@gmail.com</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Customer #2</td>
+                <td>January 11, 2014</td>
+                <td>customer2@gmail.com</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Customer #3</td>
+                <td>May 11, 2014</td>
+                <td>customer3@gmail.com</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Customer #4</td>
+                <td>September 14, 2013</td>
+                <td>customer4@gmail.com</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Customer #5</td>
+                <td>September 14, 2013</td>
+                <td>customer5@gmail.com</td>
+                <td>No</td>
+            </tr>
+        </tbody>
+    </table>-->
+</div>
+
+<script type="text/javascript" src="Content/js/admin.js"></script>

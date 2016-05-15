@@ -1,0 +1,22 @@
+{
+  "name": "HookahCRM_Client",
+  "authors": [
+    "super_men4ig <supermen4ig988@gmail.com>"
+  ],
+  "description": "",
+  "main": "index.html",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Chart.js": "^2.0.2",
+    "angular-chart.js": "^0.10.2"
+  }
+}

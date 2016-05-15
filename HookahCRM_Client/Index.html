@@ -1,0 +1,222 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>HookahCRM</title>
+    <link href="bower_components/semantic/dist/semantic.min.css" rel="stylesheet" />
+    <link href="bower_components/semantic/dist/components/sidebar.min.css" rel="stylesheet">
+    <link href="Content/css/admin.css" rel="stylesheet">
+    <link href="bower_components/angular-chart.js/dist/angular-chart.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+</head>
+<body ng-cloak data-page="products">
+
+    <div ng-if="globals.currentUser.username !== undefined">
+        <div ng-controller="NavbarController as vm">
+            <div class="ui sidebar inverted vertical menu">
+                <div class="item">
+                    <h3>{{ vm.appTitle }}</h3>
+                </div>
+                <div class="item">
+                    <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch().Name }}</h4>
+                    <div class="black two buttons ui">
+                        <button class="ui button" ng-click="vm.notFoundClick('Функция пока не доступна...')">
+                            <i class="user large icon"></i>
+
+                        </button>
+                        <button class="ui button" ng-click="vm.loginOrOut()">
+                            <i class="sign out large icon"></i>
+                        </button>
+                    </div>
+                </div>
+                <a class="item" href="#/main">
+                    Главная
+                </a>
+                <a class="item" href="#/sales">
+                    Продажи
+                    <div class="ui label">11</div>
+                </a>
+                <a class="item" href="#/storage">
+                    Склад
+                    <div class="ui label">22</div>
+                </a>
+                <a class="item" href="#/tobacco">
+                    Продукция
+                    <div class="ui label">2</div>
+                </a>
+                <a class="active gray item" href="#/users">
+                    Сотрудники
+                </a>
+                <!--<a class="active gray item" href="./employees.html">
+                    Employees
+                </a>-->
+            </div>
+        </div>
+    </div>
+
+    <div class="pusher">
+        <div class="ui grid container">
+            <!-- Non-responsive menu -->
+            <div ng-if="globals.currentUser.username !== undefined">
+                <div ng-controller="NavbarController as vm">
+                    <div class="ui left fixed vertical inverted menu" auto-active>
+                        <div class="item">
+                            <h3>{{ vm.appTitle }}</h3>
+                        </div>
+                        <div class="item">
+                            <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch().Name }}</h4>
+                            <div class="black two buttons ui">
+                                <button class="ui button" ng-click="vm.notFoundClick('Функция пока не доступна...')">
+                                    <i class="user large icon"></i>
+
+                                </button>
+                                <button class="ui button" ng-click="vm.loginOrOut()">
+                                    <i class="sign out large icon"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <!--ng-click="vm.notFoundClick('Функция пока не доступна...')"-->
+                        <a class="item" href="#/main">
+                            Главная
+                        </a>
+                        <a class="item" href="#/sales">
+                            Продажи
+                            <div class="ui label">11</div>
+                        </a>
+                        <a class="item" href="#/storage">
+                            Склад
+                            <div class="ui label">22</div>
+                        </a>
+                        <a class="item" href="#/tobacco">
+                            Продукция
+                        </a>
+                        <a class="active gray item" href="#/users">
+                            Сотрудники
+                        </a>
+                    </div>
+
+                    <modal ng-model="vm.showSelectBranchModal" closable="false">
+                        <!--<i class="close icon" ng-click="vm.closeBranchWindow()"></i>-->
+                        <div class="header">
+                            Выбор заведения
+                        </div>
+                        <div class="content">
+                            <div class="right">
+                                <dropdown title="Выбор заведения" ng-model="vm.selectedBranch">
+                                    <dropdown-group value="c.Id" title="c.Name" ng-repeat="c in vm.branchActiveList">{{c.Name}}</dropdown-group>
+                                </dropdown>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <div class="one fluid ui buttons">
+                                <div class="ui positive labeled icon button" ng-click="vm.selectBranch()">
+                                    Выбрать
+                                    <i class="checkmark icon"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </modal>
+
+                    <section ng-controller="ReportBlankController as vm">
+                        <modal ng-model="vm.showSelectStorageModal" closable="false" scrolling="true">
+                            <!--<i class="close icon" ng-click="vm.closeBranchWindow()"></i>-->
+
+                            <div class="header">
+                                Заполните бланк отчётности [{{ (!vm.isCloseRepot) ? 'Открытие' : 'Закрытие' }}]
+                            </div>
+
+                            <div class="content">
+                                <div class="right">
+
+                                    <form class="ui large form" name="insertStorageBlank" novalidate>
+
+                                        <accordion close="true">
+                                            <accordion-group title="{{ value.Name }}" ng-repeat="(key, value) in vm.tobaccoList">
+                                                <div ng-repeat="tStyle in value.TobaccoList">
+                                                    <label class="transition">{{ tStyle.Name }}</label>
+                                                    <div class="ui right labeled input">
+                                                        <!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+                                                        <input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[0][value.Id][tStyle.Id]" required>
+                                                        <div class="ui basic label">
+                                                            грамм
+                                                        </div>
+                                                    </div>
+                                                  </div>
+                                            </accordion-group>
+                                        </accordion>
+
+                                        <!--<div class="field" ng-class="{'error': insertStorageBlank.categoryName.$dirty && addTobaccoForm.categoryName.$invalid}">
+                            <div class="ui input">
+
+                            </div>
+                        </div>-->
+                                        <!--<div class="ui message" ng-class="vm.message.status == 'error' ? 'error' : 'success'"
+                        style="display:block;"
+                        data-ng-show="vm.message.code != ''">{{ vm.message.status }}: {{ vm.message.code }}</div>-->
+
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <div class="one fluid ui buttons">
+                                    <div class="ui positive labeled icon button" ng-click="vm.insertReportStorageBlank(false)">
+                                        Отправить
+                                        <i class="checkmark icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </modal>
+                    </section>
+                </div>
+            </div>
+
+            <div class="ui main grid" ng-view id="ng-view">
+                <!-- Responsive top menu -->
+                <!--<div class="column">
+        <div class="slide-animation-container">
+            <div data-ng-view id="ng-view" class="slide-animation"></div>
+        </div>
+    </div>-->
+            </div>
+            <div class="ui page dimmer transition active" data-loading>
+                <div class="content">
+                    <div class="center">
+                        <div class="ui text loader header">Loading</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="position: fixed; right: 10px; bottom: 10px;" ng-show="developConstants.isDebug">
+        <h2>Debug version {{ developConstants.version }}</h2>
+    </div>
+
+        <!--<div class="ui middle aligned center aligned grid">
+            <div class="column">
+
+                <div class="slide-animation-container">
+                    <div data-ng-view id="ng-view" class="slide-animation"></div>
+                </div>
+
+            </div>
+        </div>-->
+
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="bower_components/Chart.js/Chart.js"></script>
+    <script src="bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
+    <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.js"></script>
+
+    <script src="bower_components/semantic/dist/semantic.js"></script>
+    <script src="bower_components/angular-semantic-ui/dist/angular-semantic-ui.min.js"></script>
+    <script src="bower_components/requirejs/require.js" data-main="Scripts/main"></script>
+</body>
+</html>
