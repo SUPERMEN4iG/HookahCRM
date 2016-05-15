@@ -24,11 +24,19 @@ namespace HookahCRM.Controllers
         [ActionName("Current")]
         public StorageModel Get(long branchId)
         {
-            return new StorageModel().Bind(
-                    _session.QueryOver<D_Storage>()
-                    .Where(x => x.Branch.Id == branchId)
-                    .List().LastOrDefault()
-                );
+			StorageModel stModel = new StorageModel().Bind(
+					_session.QueryOver<D_Storage>()
+					.Where(x => x.Branch.Id == branchId)
+					.List()
+					.Select(x => {
+						x.StorageExpendable = x.StorageExpendable.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList();
+						x.StorageHookah = x.StorageHookah.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList();
+						return x;
+					})
+					.LastOrDefault()
+				);
+
+			return stModel;
         }
 
         [ActionName("ReportBlank")]

@@ -468,6 +468,8 @@ namespace HookahCRM.DataModel
             //HasMany(x => x.Sales).KeyColumn("Sales_Id").Cascade.All();
             HasManyToMany(x => x.Workers).Inverse().Cascade.All();
 
+			HasOne(x => x.Storage);
+
             HasMany<D_HookahPriceDirectory>(x => x.HooahPriceDirectory).Inverse().Cascade.All();
             HasMany<D_AdditionPriceDirectory>(x => x.AdditionPriceDirectory).Inverse().Cascade.All();
 
@@ -562,7 +564,8 @@ namespace HookahCRM.DataModel
     {
         public D_Storage_Map()
         {
-            References(x => x.Branch).Column("Branch_Id").Cascade.SaveUpdate();
+			//References(x => x.Branch).Unique();
+			References(x => x.Branch);
             References(x => x.Worker).Column("Worker_Id").Cascade.SaveUpdate();
             HasMany(x => x.StorageHookah).KeyColumn("StorageHookah_Id").Cascade.All();
             HasMany(x => x.StorageExpendable).KeyColumn("StorageExpendable_Id").Cascade.All();

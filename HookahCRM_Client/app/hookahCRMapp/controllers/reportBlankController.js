@@ -18,7 +18,7 @@ define(['app'], function (app) {
             storageService.getReportBlank(vm.currentBranch().StorageId, vm.isCloseRepot).then(function (data) {
                 console.log(data);
 
-                if ((vm.isCloseRepot || data.IsClosed) || (data[0] == null && data[1] == null)) {
+                if ((data[0] === null && data[1] === null) || (!data[0].IsClosed && vm.isCloseRepot)) {
                     tobaccoService.getTobaccoList().then(function (value) {
                         vm.tobaccoList = value;
                         vm.showSelectStorageModal = vm.showSelectStorageModalTemp;
@@ -35,15 +35,17 @@ define(['app'], function (app) {
 
                         vm.currentReportBlank[0] = {};
                         angular.forEach(value, function (data) {
-                            vm.currentReportBlank[0][data.Id] = {};
-                            angular.forEach(data.TobaccoList, function (dataTobacco) {
-                                vm.currentReportBlank[0][data.Id][dataTobacco.Id] = 0;
-                            });
+                        	vm.currentReportBlank[0][data.Id] = {};
+                        	angular.forEach(data.TobaccoList, function (dataTobacco) {
+                        		vm.currentReportBlank[0][data.Id][dataTobacco.Id] = 0;
+                        	});
                         });
 
-                        angular.forEach(data[0].StorageTobaccoList, function (key, val) {
-                            vm.currentReportBlank[0][key.TobaccoStyle.Category.Id][key.TobaccoStyle.Id] = key.Weight;
-                        });
+                        if (data[0] !== null) {
+                        	angular.forEach(data[0].StorageTobaccoList, function (key, val) {
+                        		vm.currentReportBlank[0][key.TobaccoStyle.Category.Id][key.TobaccoStyle.Id] = key.Weight;
+                        	});
+                        }
 
                         console.log(vm.currentReportBlank);
                     });
@@ -61,6 +63,8 @@ define(['app'], function (app) {
                 else
                     toastr.info('Бланк отчётности сохранён! Рабочий день закончен!', 'Информация');
             });
+
+            $rootScope.$broadcast('storage:updated', true);
         };
 
         $rootScope.$on('onSelectBranch', function (event, data) {

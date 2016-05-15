@@ -19,6 +19,8 @@ namespace HookahCRM.Models
 
         public IList<UserModel> Workers { get; set; }
 
+		public StorageModel Storage { get; set; }
+
         public override BranchModel Bind(D_Branch @object)
         {
             if (@object == null)
@@ -28,7 +30,8 @@ namespace HookahCRM.Models
 
             this.Name = @object.Name;
             this.Address = @object.Address;
-            this.StorageId = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault().Id;
+			this.Storage = new StorageModel().Bind(_session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault());
+            //this.StorageId = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault().Id;
 
             return this;
         }

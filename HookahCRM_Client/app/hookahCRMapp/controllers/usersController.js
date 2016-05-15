@@ -2,14 +2,15 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$location', '$routeParams', 'authService', 'usersService', '$rootScope'];
+	var injectParams = ['$location', '$routeParams', 'authService', 'usersService', '$rootScope', 'branchService'];
 
-    var UsersController = function ($location, $routeParams, authService, usersService, $rootScope) {
+	var UsersController = function ($location, $routeParams, authService, usersService, $rootScope, branchService) {
         var vm = this;
 
         vm.users = [];
         vm.controllerName = "Сотрудники";
         $rootScope.pageName = 'Users';
+        vm.currentBranch = $rootScope.currentBranch();
 
         function init() {
             getUsers();
@@ -22,9 +23,17 @@ define(['app'], function (app) {
                 });
         };
 
-        $rootScope.$on('onSelectBranch', function (event, data) {
-            init();
+        if (vm.currentBranch !== undefined)
+        	init();
+
+        $rootScope.$on('branch:updated', function (event, data) {
+        	vm.currentBranch = data[0];
+        	init();
         });
+
+        //$rootScope.$on('onSelectBranch', function (event, data) {
+        //    init();
+		//});
     };
 
     UsersController.$inject = injectParams;

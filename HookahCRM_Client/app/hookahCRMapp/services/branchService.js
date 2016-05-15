@@ -35,6 +35,7 @@ define(['app'], function (app) {
 
             var obj = service.getActiveBranchByName(newBranch);
             currentBranch = obj;
+            $rootScope.$broadcast('branch:updated', currentBranch);
         };
 
         return service;

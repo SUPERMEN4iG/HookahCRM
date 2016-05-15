@@ -21,8 +21,8 @@
 </div>
 
 <div class="twelve wide sales column">
-    <h4>Текущее состояние склада: Выдача / Сдача</h4>
-    <h4>Главный по складу: Имя</h4>
+    <h4>Текущее состояние склада: {{ vm.currentStorageGetStateString() }}</h4>
+    <h4>Главный по складу:  {{ vm.currentStorage.Worker.FirstName }}. {{ vm.currentStorage.Worker.LastName[0] }}. {{ vm.currentStorage.Worker.MiddleName[0] }}</h4>
 
     <button class="ui primary button" ng-click="vm.closeStorage()">
         Закрыть склад

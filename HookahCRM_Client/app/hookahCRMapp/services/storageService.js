@@ -28,6 +28,17 @@ define(['app'], function (app) {
                 });
         };
 
+    	// Получаем массив состояний складов
+		// IsClosed:
+    	// 0 - Склад открыт
+		// 1 - Склад закрыт
+        service.getCurrentStorage = function (branchId) {
+        	return $http.get(serviceBase + 'Current/', { params: { branchId: branchId } }).then(
+				function (response) {
+					return response.data;
+				});
+        };
+
         service.getActiveBranchByName = function (name) {
             if (currentBranch == null)
                 return;
