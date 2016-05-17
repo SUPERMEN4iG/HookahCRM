@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$parse'];
+    var injectParams = ['$parse', '$timeout'];
 
-    var modalDirective = function ($parse) {
+    var modalDirective = function ($parse, $timeout) {
         return {
             restrict: 'E',
             replace: true,
@@ -24,15 +24,30 @@ define(['app'], function (app) {
                         scope.onHide();
                     },
                     closable: scope.closable,
-                    onShow: scope.onShow
+                    onShow: scope.onShow,
+                    onVisible: function () {
+                        $timeout(function () {
+                            element.modal('refresh');
+                        }, 100);
+                    },
+                    observeChanges: true
                 });
 
                 element.addClass(scope.scrolling ? 'scrolling' : '');
-                
+
                 scope.$watch(function () {
                     return ngModel.$modelValue;
                 }, function (modelValue) {
                     element.modal(modelValue ? 'show' : 'hide');
+                    // Исправлено автоснижение окна, когда контент слишком большой
+                    
+
+                    element.find('.ui.accordion .accordion .title, .ui.accordion .title').on('click', function () {
+                        $timeout(function () {
+                            console.info('modal: refresh');
+                        element.modal('refresh');
+                    }, 500);
+                    });
                 });
                 scope.$on('$destroy', function () {
                     element.modal('hide');

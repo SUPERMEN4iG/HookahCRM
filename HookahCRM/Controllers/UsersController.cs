@@ -21,6 +21,26 @@ namespace HookahCRM.Controllers
             return listUsers;
         }
 
+        [ActionName("Repository")]
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]UserModel model)
+        {
+            D_User d_user = _session.QueryOver<D_User>().Where(x => x.Id == model.Id).List().FirstOrDefault();
+
+            if (d_user != null)
+            {
+                d_user = model.UnBind(d_user);
+            }
+            else
+            {
+                d_user = model.UnBind();
+            }
+
+            _session.SaveOrUpdate(d_user);
+
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
         // GET api/<controller>/5
         public string Get(int id)
         {

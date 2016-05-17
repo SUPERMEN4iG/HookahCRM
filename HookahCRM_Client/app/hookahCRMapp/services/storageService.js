@@ -8,20 +8,20 @@ define(['app'], function (app) {
         var service = {},
             serviceBase = baseApiUrl + 'storage/';
 
-        service.getReportBlank = function (storageId, isClosed) {
-            return $http.get(serviceBase + 'ReportBlank/', { params: { storageId: storageId, isClosed: isClosed } }).then(
+        service.getReportBlank = function (branchId, isClosed) {
+            return $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
                 function (response) {
                     return response.data;
                 });
         };
 
-        service.putReportBlank = function (obj, storageId, isClose) {
+        service.putReportBlank = function (obj, branchId, isClose) {
             //$http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
             console.log(obj);
             return $http({
                 method: 'PUT',
                 url: serviceBase + 'ReportBlank/',
-                data: { 'storageId': storageId, 'model': obj, 'isClose': isClose }
+                data: { 'branchId': branchId, 'model': obj, 'isClose': isClose }
             }).then(
                 function (response) {
                     return response;
@@ -33,7 +33,7 @@ define(['app'], function (app) {
     	// 0 - Склад открыт
 		// 1 - Склад закрыт
         service.getCurrentStorage = function (branchId) {
-        	return $http.get(serviceBase + 'Current/', { params: { branchId: branchId } }).then(
+            return $http.get(serviceBase + 'Current/', { params: { branchId: branchId } }).then(
 				function (response) {
 					return response.data;
 				});

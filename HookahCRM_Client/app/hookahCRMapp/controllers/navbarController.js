@@ -13,7 +13,7 @@ define(['app'], function (app) {
         vm.isCollapsed = false;
         vm.currentUser = {};
 
-        vm.selectedBranch = {};
+        vm.selectedBranch = null;
         vm.branchActiveList = [];
         vm.showSelectBranchModal = false;
         //vm.showSelectStorageModal = false;
@@ -63,7 +63,9 @@ define(['app'], function (app) {
 
         vm.selectBranch = function () {
             if (vm.selectedBranch == null)
-                return;
+                return
+
+            console.info(vm.selectedBranch);
 
             branchService.setCurrentBranch(vm.selectedBranch);
             toastr.info('Выбрано заведение ' + vm.selectedBranch, 'Информация');

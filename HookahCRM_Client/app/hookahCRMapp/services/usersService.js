@@ -5,13 +5,27 @@ define(['app'], function (app) {
     var injectParams = ['$http', '$q', 'baseApiUrl'];
 
     var usersService = function ($http, $q, baseApiUrl) {
-        var factory = {};
+        var service = {},
+            serviceBase = baseApiUrl + 'users/';
 
-        factory.getUsers = function () {
+        service.getUsers = function () {
             return $http.get(baseApiUrl + 'users/list/').then(
                 function (response) {
                     console.log(response.data);
                     return response.data;
+                });
+        };
+
+        service.putUser = function (obj) {
+            //$http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+            console.log(obj);
+            return $http({
+                method: 'PUT',
+                url: serviceBase + 'Repository/',
+                data: JSON.stringify(obj)
+            }).then(
+                function (response) {
+                    return response;
                 });
         };
 
@@ -120,7 +134,7 @@ define(['app'], function (app) {
         //    return total;
         //};
 
-        return factory;
+        return service;
     };
 
     usersService.$inject = injectParams;

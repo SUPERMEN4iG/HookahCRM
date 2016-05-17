@@ -8,6 +8,16 @@
     <link href="bower_components/angular-chart.js/dist/angular-chart.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+
+        .ui.page.dimmer {
+            overflow-y: scroll;
+        }
+    </style>
 </head>
 <body ng-cloak data-page="products">
 
@@ -102,17 +112,30 @@
                         </div>
                         <div class="content">
                             <div class="right">
-                                <dropdown title="Выбор заведения" ng-model="vm.selectedBranch">
-                                    <dropdown-group value="c.Id" title="c.Name" ng-repeat="c in vm.branchActiveList">{{c.Name}}</dropdown-group>
-                                </dropdown>
+                                <form class="ui large form" name="selectBranchForm" novalidate>
+
+                                    <div class="two fields" ng-class="{'error': selectBranchForm.branchNameString.$dirty && selectBranchForm.branchNameString.$invalid}">
+                                        <div class="field">
+                                            <label>Заведение</label>
+                                            <dropdown title="Выбор заведения" ng-model="vm.selectedBranch" open="true">
+                                                <dropdown-group value="c.Id" title="c.Name" ng-repeat="c in vm.branchActiveList">{{c.Name}}</dropdown-group>
+                                            </dropdown>
+                                            <input type="hidden" name="branchNameString" ng-model="vm.selectedBranch" required="" />
+                                            <span ng-show="selectBranchForm.branchNameString.$touched && selectBranchForm.branchNameString.$invalid" class="ui red pointing above ui label">Точка должна быть выбрана</span>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                         <div class="actions">
                             <div class="one fluid ui buttons">
-                                <div class="ui positive labeled icon button" ng-click="vm.selectBranch()">
+                                <button type="submit"
+                                        ng-click="vm.selectBranch()"
+                                        ng-disabled="vm.selectedBranch == null"
+                                        class="ui positive right labeled icon button">
                                     Выбрать
                                     <i class="checkmark icon"></i>
-                                </div>
+                                </button>
                             </div>
                         </div>
                     </modal>
@@ -130,7 +153,7 @@
 
                                     <form class="ui large form" name="insertStorageBlank" novalidate>
 
-                                        <accordion close="true">
+                                        <accordion close="true" ng-if="vm.currentReportBlank[0] !== undefined">
                                             <accordion-group title="{{ value.Name }}" ng-repeat="(key, value) in vm.tobaccoList">
                                                 <div ng-repeat="tStyle in value.TobaccoList">
                                                     <label class="transition">{{ tStyle.Name }}</label>
@@ -141,7 +164,37 @@
                                                             грамм
                                                         </div>
                                                     </div>
-                                                  </div>
+                                                </div>
+                                            </accordion-group>
+                                        </accordion>
+
+                                        <accordion close="true" ng-if="vm.currentReportBlank[1] !== undefined">
+                                            <accordion-group title="Оборудование">
+                                                <div ng-repeat="expendable in vm.expendableList">
+                                                    <label class="transition">{{ expendable.Name }}</label>
+                                                    <div class="ui right labeled input">
+                                                        <!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+                                                        <input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[0][expendable.Type][expendable.Id]" required>
+                                                        <div class="ui basic label">
+                                                            штук
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </accordion-group>
+                                        </accordion>
+
+                                        <accordion close="true" ng-if="vm.currentReportBlank[2] !== undefined">
+                                            <accordion-group title="{{ value.Name }}" ng-repeat="(key, value) in vm.tobaccoList">
+                                                <div ng-repeat="tStyle in value.TobaccoList">
+                                                    <label class="transition">{{ tStyle.Name }}</label>
+                                                    <div class="ui right labeled input">
+                                                        <!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+                                                        <input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[0][value.Id][tStyle.Id]" required>
+                                                        <div class="ui basic label">
+                                                            грамм
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </accordion-group>
                                         </accordion>
 

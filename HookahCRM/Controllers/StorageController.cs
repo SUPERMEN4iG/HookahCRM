@@ -13,7 +13,7 @@ namespace HookahCRM.Controllers
 {
     public struct PutReportBlank
     {
-        public long storageId { get; set; }
+        public long branchId { get; set; }
         public Dictionary<string, Dictionary<string, Dictionary<string, string>>> model { get; set; }
         public bool isClose { get; set; }
     }
@@ -40,27 +40,84 @@ namespace HookahCRM.Controllers
         }
 
         [ActionName("ReportBlank")]
-        public IList<IStorageModel> Get(long? storageId, bool isClosed)
+        public IList<IReportBlankModel> Get(long? branchId, bool isClosed)
         {
-            if (storageId == null)
+            if (branchId == null)
                 throw new NullReferenceException("storageId is null");
 
-            IList<IStorageModel> listModels = new List<IStorageModel>();
+            IList<IReportBlankModel> listModels = new List<IReportBlankModel>();
 
             StorageHookahModel stHookahModel = new StorageHookahModel().Bind(
-                    _session.QueryOver<D_StorageHookah>()
-                    .Where(x => x.Storage.Id == storageId && x.CreationDateTime.Date == DateTime.Today)
+                    _session.QueryOver<D_Branch>()
+                    .Where(x => x.Id == branchId)
                     .List().LastOrDefault()
+                    .Storage.StorageHookah
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .ToList()
+                    .LastOrDefault()
                 );
 
             StorageExpendableModel stExpendableModel = new StorageExpendableModel().Bind(
-                    _session.QueryOver<D_StorageExpendable>()
-                    .Where(x => x.Storage.Id == storageId && x.CreationDateTime.Date == DateTime.Today)
+                    _session.QueryOver<D_Branch>()
+                    .Where(x => x.Id == branchId)
                     .List().LastOrDefault()
+                    .Storage.StorageExpendable
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .ToList()
+                    .LastOrDefault()
                 );
 
             listModels.Add(stHookahModel);
             listModels.Add(stExpendableModel);
+
+            if (isClosed)
+            {
+                DayHookahSaleModel dsHookahModel = new DayHookahSaleModel().Bind(
+                    _session.QueryOver<D_Branch>()
+                    .Where(x => x.Id == branchId)
+                    .List().LastOrDefault()
+                    .Sales.LastOrDefault().DayHoohahSales
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .ToList()
+                    .LastOrDefault()
+                );
+
+                DayAdditionSalesModel dsAdditionModel = new DayAdditionSalesModel().Bind(
+                        _session.QueryOver<D_Branch>()
+                        .Where(x => x.Id == branchId)
+                        .List().LastOrDefault()
+                        .Sales.LastOrDefault().DayAdditionSales
+                        .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                        .ToList()
+                        .LastOrDefault()
+                );
+
+                DayHookahSaleModel dsHookahModelAction = new DayHookahSaleModel().Bind(
+                    _session.QueryOver<D_Branch>()
+                    .Where(x => x.Id == branchId)
+                    .List().LastOrDefault()
+                    .Sales.LastOrDefault().DayHoohahSales
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
+                    .ToList()
+                    .LastOrDefault()
+                );
+
+                DayAdditionSalesModel dsAdditionModelAction = new DayAdditionSalesModel().Bind(
+                        _session.QueryOver<D_Branch>()
+                        .Where(x => x.Id == branchId)
+                        .List().LastOrDefault()
+                        .Sales.LastOrDefault().DayAdditionSales
+                        .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
+                        .ToList()
+                        .LastOrDefault()
+                );
+
+                listModels.Add(dsHookahModel);
+                listModels.Add(dsAdditionModel);
+
+                listModels.Add(dsHookahModelAction);
+                listModels.Add(dsAdditionModelAction);
+            }
 
             return listModels;
         }
@@ -76,7 +133,7 @@ namespace HookahCRM.Controllers
 
             D_Storage d_storage = _session.QueryOver<D_Storage>()
                 .List()
-                .Where(x => x.Id == obj.storageId)
+                .Where(x => x.Branch.Id == obj.branchId)
                 .FirstOrDefault();
 
             D_User d_userCurrent = _session.QueryOver<D_User>()
@@ -104,11 +161,11 @@ namespace HookahCRM.Controllers
             }
 
             storageModel.StorageHookah.Add(stHookahModel);
-            storageModel.Branch.StorageId = storageModel.Id;
-            storageModel.Branch.Workers = new List<UserModel>();
-            storageModel.Branch.Workers.Add(stHookahModel.Worker);
+            //storageModel.Branch.StorageId = storageModel.Id;
+            //storageModel.Branch.Workers = new List<UserModel>();
+            //storageModel.Branch.Workers.Add(stHookahModel.Worker);
 
-            d_storage.Worker = d_userCurrent;
+            //d_storage.Worker = d_userCurrent;
 
             d_storage = storageModel.UnBind(d_storage);
             _session.SaveOrUpdate(d_storage);

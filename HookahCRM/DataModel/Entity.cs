@@ -152,24 +152,34 @@ namespace HookahCRM.DataModel
         public virtual IList<D_DayAdditionSales> DayAdditionSales { get; set; }
     }
 
+    public enum ActionType : int
+    {
+        None = 0,
+        FreeHookah = 1
+    }
+
+    public abstract class D_DaySales : D_BaseObject
+    {
+        public virtual long Count { get; set; }
+        public virtual D_Sales Sales { get; set; }
+
+        public virtual ActionType ActionType { get; set; }
+    }
+
     /// <summary>
     /// Продажа кальяна
     /// </summary>
-    public class D_DayHoohahSale : D_BaseObject
+    public class D_DayHoohahSale : D_DaySales
     {
         public virtual D_Tobacco Tobacco { get; set; }
-        public virtual int Count { get; set; }
-        public virtual D_Sales Sales { get; set; }
     }
 
     /// <summary>
     /// Продажа дополнения
     /// </summary>
-    public class D_DayAdditionSales : D_BaseObject
+    public class D_DayAdditionSales : D_DaySales
     {
         public virtual D_Addition Addition { get; set; }
-        public virtual int Count { get; set; }
-        public virtual D_Sales Sales { get; set; }
     }
 
     /// <summary>
@@ -277,12 +287,20 @@ namespace HookahCRM.DataModel
         public virtual IList<D_StorageExpendableCount> StorageExpendableListCount { get; set; }
     }
 
+    public enum ExpendableType : int 
+    {
+        Equipment = 0,
+        ExpendableMaterial = 1,
+        OfficeItem = 2,
+    }
+
     /// <summary>
     /// Расходник
     /// </summary>
     public class D_Expendable : D_BaseObject
     {
         public virtual string Name { get; set; }
+        public virtual ExpendableType Type { get; set; }
     }
 
     /// <summary>
@@ -468,7 +486,9 @@ namespace HookahCRM.DataModel
             //HasMany(x => x.Sales).KeyColumn("Sales_Id").Cascade.All();
             HasManyToMany(x => x.Workers).Inverse().Cascade.All();
 
-			HasOne(x => x.Storage);
+            //References(x => x.Storage).ForeignKey("Storage_Id").Cascade.All();
+            HasOne(x => x.Storage).PropertyRef(s => s.Branch).Cascade.All();
+            HasMany(x => x.Sales).Inverse().Cascade.All();
 
             HasMany<D_HookahPriceDirectory>(x => x.HooahPriceDirectory).Inverse().Cascade.All();
             HasMany<D_AdditionPriceDirectory>(x => x.AdditionPriceDirectory).Inverse().Cascade.All();
@@ -485,6 +505,7 @@ namespace HookahCRM.DataModel
         {
             References(x => x.Sales).Column("DayHoohahSales_Id").Cascade.SaveUpdate();
             References(x => x.Tobacco).Column("Tobacco_Id").Cascade.SaveUpdate();
+            Map(x => x.ActionType).CustomType<ActionType>().Default("0");
             Map(x => x.Count).Length(128);
         }
     }
@@ -495,6 +516,7 @@ namespace HookahCRM.DataModel
         {
             References(x => x.Sales).Column("DayAdditionSales_Id").Cascade.SaveUpdate();
             References(x => x.Addition).Column("Addition_Id").Cascade.SaveUpdate();
+            Map(x => x.ActionType).CustomType<ActionType>().Default("0");
             Map(x => x.Count).Length(128);
         }
     }
@@ -537,6 +559,7 @@ namespace HookahCRM.DataModel
         public D_Expendable_Map()
         {
             Map(x => x.Name).Length(256).Nullable();
+            Map(x => x.Type).CustomType<ExpendableType>().Default("0");
         }
     }
 
@@ -565,7 +588,7 @@ namespace HookahCRM.DataModel
         public D_Storage_Map()
         {
 			//References(x => x.Branch).Unique();
-			References(x => x.Branch);
+            References(x => x.Branch, "STORAGE_FK_BRANCH").Not.Nullable();
             References(x => x.Worker).Column("Worker_Id").Cascade.SaveUpdate();
             HasMany(x => x.StorageHookah).KeyColumn("StorageHookah_Id").Cascade.All();
             HasMany(x => x.StorageExpendable).KeyColumn("StorageExpendable_Id").Cascade.All();

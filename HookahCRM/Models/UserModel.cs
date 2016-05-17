@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Helpers;
 
 namespace HookahCRM.Models
 {
@@ -15,24 +16,29 @@ namespace HookahCRM.Models
 
         [Required]
         [DataType(DataType.Password)]
-        [JsonIgnore]
         public string Password { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
         public string MiddleName { get; set; }
 
         public string PhotoPath { get; set; }
 
+        [Required]
         public string Phone { get; set; }
 
         [JsonIgnore]
-        public IEnumerable<D_AbstractRole> Roles { get; set; }
+        public IList<D_AbstractRole> Roles { get; set; }
 
         //[JsonIgnore]
-        public IEnumerable<D_Branch> Branches { get; set; }
+        public IList<D_Branch> Branches { get; set; }
+
+        [Required]
+        public string BranchName { get; set; }
 
         public override UserModel Bind(D_User @object)
         {
@@ -47,9 +53,18 @@ namespace HookahCRM.Models
             this.LastName = @object.LastName;
             this.MiddleName = @object.MiddleName;
             this.PhotoPath = @object.Photo;
-            this.Phone = @object.Photo;
+            this.Phone = @object.Phone;
             this.Roles = @object.Roles;
-            this.Branches = @object.BranchList;
+
+            if (@object.BranchList == null)
+            {
+                this.Branches = new List<D_Branch>();
+                this.Branches.Add(_session.QueryOver<D_Branch>().Where(x => x.Name == this.BranchName).List().FirstOrDefault());
+            }
+            else
+            {
+                this.Branches = @object.BranchList;
+            }
 
             return this;
         }
@@ -60,7 +75,32 @@ namespace HookahCRM.Models
                 @object = new D_User();
 
             @object.Login = this.Login;
-            @object.Password = this.Password;
+            @object.Password = Crypto.HashPassword(this.Password);
+            @object.FirstName = this.FirstName;
+            @object.LastName = this.LastName;
+            @object.MiddleName = this.MiddleName;
+            @object.Photo = this.PhotoPath;
+            @object.Phone = this.Phone;
+
+            if (this.Roles == null)
+            {
+                @object.Roles = new List<D_AbstractRole>();
+                @object.Roles.Add(new D_WorkerRole() { User = @object, RoleType = RoleType.Worker });
+            }
+            else
+            {
+                @object.Roles = this.Roles;
+            }
+
+            if (this.Branches == null)
+            {
+                @object.BranchList = new List<D_Branch>();
+                @object.BranchList.Add(_session.QueryOver<D_Branch>().Where(x => x.Name == this.BranchName).List().FirstOrDefault());
+            }
+            else
+            {
+                @object.BranchList = this.Branches;
+            }
 
             return @object;
         }

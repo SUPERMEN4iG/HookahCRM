@@ -13,7 +13,9 @@ define(['app'], function (app) {
         service.getActiveBranchList = function () {
             return $http.get(serviceBase + 'ActiveBranchList/').then(
                 function (response) {
-                    list.push(response.data);
+                    if (list.length == 0)
+                        list.push(response.data);
+
                     return response.data;
                 });
         };

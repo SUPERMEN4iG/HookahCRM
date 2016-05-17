@@ -146,10 +146,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdditionController.cs" />
     <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BranchController.cs" />
+    <Compile Include="Controllers\ExpendableController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\SecureDataController.cs" />
     <Compile Include="Controllers\StorageController.cs" />
     <Compile Include="Controllers\TobaccoController.cs" />
@@ -167,6 +170,7 @@
     <Compile Include="Lib\NhibernateConfiguration.cs" />
     <Compile Include="Models\AbstractModel.cs" />
     <Compile Include="Models\BranchModel.cs" />
+    <Compile Include="Models\SalesModel.cs" />
     <Compile Include="Models\StorageModel.cs" />
     <Compile Include="Models\TobaccoModel.cs" />
     <Compile Include="Models\UserModel.cs" />
@@ -199,12 +203,15 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Content\Site.css" />

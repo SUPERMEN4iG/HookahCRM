@@ -39,11 +39,11 @@ namespace HookahCRM.Models
         }
     }
 
-    public interface IStorageModel
+    public interface IReportBlankModel
     {
     }
 
-    public class StorageHookahModel : AbstractDataModel<D_StorageHookah, StorageHookahModel>, IStorageModel
+    public class StorageHookahModel : AbstractDataModel<D_StorageHookah, StorageHookahModel>, IReportBlankModel
     {
 		public StorageModel Storage { get; set; }
 		public long? StorageId { get; set; }
@@ -62,7 +62,7 @@ namespace HookahCRM.Models
             this.IsClosed = @object.IsClosed;
             this.StorageTobaccoList = @object.StorageTobaccoList.Select(x => { return new StorageHookahStyleModel().Bind(x); }).ToList();
             this.StorageId = @object.Storage.Id;
-			this.Storage = new StorageModel().Bind(@object.Storage);
+            //this.Storage = new StorageModel().Bind(@object.Storage);
             //this.Storage = new StorageModel().Bind(_session.QueryOver<D_Storage>().Where(x => x.Id == @object.Storage.Id).List().FirstOrDefault());
 
             return this;
@@ -88,6 +88,8 @@ namespace HookahCRM.Models
 	{
 		public string Name { get; set; }
 
+        public ExpendableType Type { get; set; }
+
         public override ExpendableModel Bind(D_Expendable @object)
         {
             if (@object == null)
@@ -96,6 +98,7 @@ namespace HookahCRM.Models
             base.Bind(@object);
 
             this.Name = @object.Name;
+            this.Type = @object.Type;
 
             return this;
         }
@@ -108,6 +111,7 @@ namespace HookahCRM.Models
             @object = base.UnBind(@object);
 
             @object.Name = this.Name;
+            @object.Type = this.Type;
 
             return @object;
         }
@@ -145,7 +149,7 @@ namespace HookahCRM.Models
         }
     }
 
-    public class StorageExpendableModel : AbstractDataModel<D_StorageExpendable, StorageExpendableModel>, IStorageModel
+    public class StorageExpendableModel : AbstractDataModel<D_StorageExpendable, StorageExpendableModel>, IReportBlankModel
     {
         public UserModel Worker { get; set; }
         public bool IsClosed { get; set; }
@@ -193,8 +197,8 @@ namespace HookahCRM.Models
 
         public IList<StorageExpendableModel> StorageExpendable { get; set; }
 
-		[JsonIgnore]
-        public BranchModel Branch { get; set; }
+        //[JsonIgnore]
+        //public BranchModel Branch { get; set; }
 
         public override StorageModel Bind(D_Storage @object)
         {
@@ -203,18 +207,22 @@ namespace HookahCRM.Models
 
             base.Bind(@object);
 
-            this.Worker = new UserModel().Bind(_session.QueryOver<D_User>().Where(x => x.Id == @object.Worker.Id).List().FirstOrDefault());
-            this.Branch = new BranchModel().Bind(_session.QueryOver<D_Branch>().Where(x => x.Id == @object.Branch.Id).List().FirstOrDefault());
+            //this.Worker = new UserModel().Bind(_session.QueryOver<D_User>().Where(x => x.Id == @object.Worker.Id).List().FirstOrDefault());
+            this.Worker = new UserModel().Bind(@object.Worker);
+            //this.Branch = new BranchModel().Bind(_session.QueryOver<D_Branch>().Where(x => x.Id == @object.Branch.Id).List().FirstOrDefault());
 
-            this.StorageHookah = _session.QueryOver<D_StorageHookah>().Where(x => x.Storage.Id == @object.Id)
-				.List()
-				.Select(x => { return new StorageHookahModel().Bind(x); })
-				.ToList();
+            this.StorageHookah = @object.StorageHookah.Select(x => { return new StorageHookahModel().Bind(x); }).ToList();
+            this.StorageExpendable = @object.StorageExpendable.Select(x => { return new StorageExpendableModel().Bind(x); }).ToList();
 
-            this.StorageExpendable = _session.QueryOver<D_StorageExpendable>().Where(x => x.Storage.Id == @object.Id)
-				.List()
-				.Select(x => { return new StorageExpendableModel().Bind(x); })
-				.ToList();
+            //this.StorageHookah = _session.QueryOver<D_StorageHookah>().Where(x => x.Storage.Id == @object.Id)
+            //    .List()
+            //    .Select(x => { return new StorageHookahModel().Bind(x); })
+            //    .ToList();
+
+            //this.StorageExpendable = _session.QueryOver<D_StorageExpendable>().Where(x => x.Storage.Id == @object.Id)
+            //    .List()
+            //    .Select(x => { return new StorageExpendableModel().Bind(x); })
+            //    .ToList();
 
 			return this;
         }
@@ -226,16 +234,14 @@ namespace HookahCRM.Models
 
             @object = base.UnBind(@object);
 
-			//var temp = this.StorageHookah.LastOrDefault();
-			//var tempList = new List<StorageHookahModel>();
-			//tempList.Add(temp);
+            var temp = this.StorageHookah.LastOrDefault();
 
-			//@object.StorageHookah = tempList.Select(x => x.UnBind()).ToList();
+            @object.StorageHookah.Add(temp.UnBind());
 
-			@object.StorageHookah = this.StorageHookah.Select(x => x.UnBind()).ToList();
+            //@object.StorageHookah = this.StorageHookah.Select(x => x.UnBind()).ToList();
 
 			@object.Worker = _session.QueryOver<D_User>().Where(x => x.Id == Worker.Id).List().FirstOrDefault();
-            @object.Branch = _session.QueryOver<D_Branch>().Where(x => x.Id == Branch.Id).List().FirstOrDefault();
+            //@object.Branch = _session.QueryOver<D_Branch>().Where(x => x.Id == Branch.Id).List().FirstOrDefault();
 
             return @object;
         }

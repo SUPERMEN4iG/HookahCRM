@@ -71,8 +71,10 @@
     <Content Include="app\hookahCRMapp\directives\semantic-ui\accordionDirective.js" />
     <Content Include="app\hookahCRMapp\directives\semantic-ui\modalDirective.js" />
     <Content Include="app\hookahCRMapp\directives\tabsPanelDirective.js" />
+    <Content Include="app\hookahCRMapp\services\additionService.js" />
     <Content Include="app\hookahCRMapp\services\authService.js" />
     <Content Include="app\hookahCRMapp\services\branchService.js" />
+    <Content Include="app\hookahCRMapp\services\expendableService.js" />
     <Content Include="app\hookahCRMapp\services\routeResolver.js" />
     <Content Include="app\hookahCRMapp\services\salesService.js" />
     <Content Include="app\hookahCRMapp\services\storageService.js" />
@@ -805,6 +807,7 @@
     <Content Include="bower_components\angular-toastr\README.md" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>

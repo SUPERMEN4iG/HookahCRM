@@ -47,25 +47,30 @@ namespace HookahCRM
                 d_branch1.Name = "Branch1";
                 d_branch1.Address = "Branch1 Adress";
                 d_branch1.Workers = new List<D_User>();
+                
+                D_Addition d_addition1 = new D_Addition() { Name = "Addition1" };
+                D_Addition d_addition2 = new D_Addition() { Name = "Addition2" };
+                D_Addition d_addition3 = new D_Addition() { Name = "Addition3" };
+
                 d_branch1.AdditionPriceDirectory = new List<D_AdditionPriceDirectory>() 
                 {
                     new D_AdditionPriceDirectory()
                     { 
-                        Addition = new D_Addition() { Name = "Addition1" },
+                        Addition = d_addition1,
                         Branch = d_branch1,
                         Price = 10.0m
                     },
 
                     new D_AdditionPriceDirectory()
                     { 
-                        Addition = new D_Addition() { Name = "Addition2" },
+                        Addition = d_addition2,
                         Branch = d_branch1,
                         Price = 20.0m
                     },
 
                     new D_AdditionPriceDirectory()
                     { 
-                        Addition = new D_Addition() { Name = "Addition3" },
+                        Addition = d_addition3,
                         Branch = d_branch1,
                         Price = 30.0m
                     }
@@ -73,6 +78,10 @@ namespace HookahCRM
 
                 IList<D_TobaccoStyle> d_tobaccoList_AF = new List<D_TobaccoStyle>();
                 IList<D_TobaccoStyle> d_tobaccoList_H = new List<D_TobaccoStyle>();
+                IList<D_TobaccoStyle> d_tobaccoList_A = new List<D_TobaccoStyle>();
+                IList<D_TobaccoStyle> d_tobaccoList_F = new List<D_TobaccoStyle>();
+                IList<D_TobaccoStyle> d_tobaccoList_DS = new List<D_TobaccoStyle>();
+                IList<D_TobaccoStyle> d_tobaccoList_T = new List<D_TobaccoStyle>();
 
                 D_Tobacco d_tobacco_AF = new D_Tobacco()
                 {
@@ -83,6 +92,15 @@ namespace HookahCRM
                     TobaccoList = d_tobaccoList_AF
                 };
 
+                D_Tobacco d_tobacco_A = new D_Tobacco()
+                {
+                    Name = "Adalya",
+                    ShortName = "AD",
+                    Severity = TobaccoSeverity.Easy,
+                    Country = "Германия",
+                    TobaccoList = d_tobaccoList_A
+                };
+
                 D_Tobacco d_tobacco_H = new D_Tobacco()
                 {
                     Name = "Nakhla",
@@ -90,6 +108,33 @@ namespace HookahCRM
                     Severity = TobaccoSeverity.Middle,
                     Country = "Египет",
                     TobaccoList = d_tobaccoList_H
+                };
+
+                D_Tobacco d_tobacco_F = new D_Tobacco()
+                {
+                    Name = "Fumari",
+                    ShortName = "F",
+                    Severity = TobaccoSeverity.VeryEasy,
+                    Country = "США",
+                    TobaccoList = d_tobaccoList_F
+                };
+
+                D_Tobacco d_tobacco_DS = new D_Tobacco()
+                {
+                    Name = "DarkSide",
+                    ShortName = "DS",
+                    Severity = TobaccoSeverity.Hard,
+                    Country = "Россия",
+                    TobaccoList = d_tobaccoList_DS
+                };
+
+                D_Tobacco d_tobacco_T = new D_Tobacco()
+                {
+                    Name = "Tangiers",
+                    ShortName = "T",
+                    Severity = TobaccoSeverity.VeryHard,
+                    Country = "США",
+                    TobaccoList = d_tobaccoList_T
                 };
 
                 d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Мятная жевачка", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
@@ -107,18 +152,36 @@ namespace HookahCRM
                     new D_HookahPriceDirectory()
                     {
                         Branch = d_branch1,
-                        Tobacco = d_tobacco_H,
-                        Price = 500.0m
-                    }
-                };
+                        Tobacco = d_tobacco_A,
+                        Price = 300.0m
+                    },
 
-                d_branch1.Sales = new List<D_Sales>()
-                {
-                    new D_Sales()
+                    new D_HookahPriceDirectory()
                     {
                         Branch = d_branch1,
-                        DayAdditionSales = new List<D_DayAdditionSales>(),
-                        DayHoohahSales = new List<D_DayHoohahSale>()
+                        Tobacco = d_tobacco_H,
+                        Price = 500.0m
+                    },
+
+                    new D_HookahPriceDirectory()
+                    {
+                        Branch = d_branch1,
+                        Tobacco = d_tobacco_F,
+                        Price = 500.0m
+                    },
+
+                    new D_HookahPriceDirectory()
+                    {
+                        Branch = d_branch1,
+                        Tobacco = d_tobacco_DS,
+                        Price = 550.0m
+                    },
+
+                    new D_HookahPriceDirectory()
+                    {
+                        Branch = d_branch1,
+                        Tobacco = d_tobacco_T,
+                        Price = 600.0m
                     }
                 };
 
@@ -155,12 +218,48 @@ namespace HookahCRM
                 d_adminUser.BranchList.Add(d_branch1);
                 d_workerUser.BranchList.Add(d_branch1);
 
+                session.SaveOrUpdate(d_branch1);
+
                 d_branch1.Storage = new D_Storage();
                 d_branch1.Storage.Branch = d_branch1;
                 d_branch1.Storage.Worker = d_adminUser;
 
-                session.SaveOrUpdate(d_branch1);
                 session.SaveOrUpdate(d_branch1.Storage);
+
+                d_branch1.Sales = new List<D_Sales>()
+                {
+                    new D_Sales()
+                    {
+                        Branch = d_branch1,
+                        DayAdditionSales = new List<D_DayAdditionSales>(),
+                        DayHoohahSales = new List<D_DayHoohahSale>(),
+                        Worker = d_adminUser
+                    }
+                };
+
+                //d_branch1.Sales.FirstOrDefault().DayAdditionSales.Add(new D_DayAdditionSales()
+                //{
+                //    Addition = d_addition1,
+                //    Count = 1,
+                //    Sales = d_branch1.Sales.FirstOrDefault()
+                //});
+
+                //d_branch1.Sales.FirstOrDefault().DayHoohahSales.Add(new D_DayHoohahSale()
+                //{
+                //    Tobacco = d_tobacco_AF,
+                //    Count = 2,
+                //    Sales = d_branch1.Sales.FirstOrDefault()
+                //});
+
+                session.SaveOrUpdate(d_branch1.Sales.FirstOrDefault());
+
+                new List<D_Expendable>() { 
+                   new D_Expendable() { Name = "Шахта ХМ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Колба ХМ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Уголь", Type = ExpendableType.ExpendableMaterial },
+                   new D_Expendable() { Name = "Мундштук", Type = ExpendableType.ExpendableMaterial },
+                   new D_Expendable() { Name = "Фольга", Type = ExpendableType.ExpendableMaterial }
+                }.ForEach(x => { session.SaveOrUpdate(x); });
             }
 
             //session.Transaction.Commit();

@@ -42,10 +42,27 @@
             </div>
         </div>
         <div class="extra content">
-            <a>
-                <i class="users icon"></i>
-                100 групповых баллов
-            </a>
+
+            <div class="ui list">
+                <div class="item">
+                    <i class="marker icon"></i>
+                    <div class="content">
+                        <a>NewYork</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <i class="phone icon"></i>
+                    <div class="content">
+                        <a>{{obj.Phone}}</a>
+                    </div>
+                </div>
+                <div class="item">
+                    <i class="group icon"></i>
+                    <div class="content">
+                        <a>0 баллов</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -54,7 +71,7 @@
             <div class="header">Добавить сотрудника</div>
         </div>
         <div class="extra content">
-            <button class="ui button add-staff">Добавить сотрудника</button>
+            <button class="ui button add-staff" ng-click="vm.openUserCreateModal(null, false)">Добавить сотрудника</button>
         </div>
     </div>
 
@@ -105,8 +122,26 @@
                 {{obj.FirstName}} {{obj.LastName[0]}}. {{obj.MiddleName[0]}}.
             </div>
             <div class="meta">
-                <i class="users icon"></i>
-                100 групповых баллов
+                <div class="ui list">
+                    <div class="item">
+                        <i class="marker icon"></i>
+                        <div class="content">
+                            <a>NewYork</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="phone icon"></i>
+                        <div class="content">
+                            <a>{{obj.Phone}}</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="group icon"></i>
+                        <div class="content">
+                            <a>0 баллов</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="description">
                 Создан {{obj.CreationDateTime | date:'MM/dd/yyyy' }}
@@ -141,5 +176,92 @@
         </div>
     </div>-->
 </div>
+
+<modal ng-model="vm.showUserCreateModal">
+    <i class="close icon" ng-click="vm.closeUserCreateModal()"></i>
+    <div class="header">
+        Добавление сотрудника
+    </div>
+    <div class="content">
+        <div class="right">
+            <form class="ui large form" name="addUserForm" novalidate>
+                <div class="three fields" ng-class="{'error': addUserForm.username.$dirty && addUserForm.username.$invalid}">
+                    <div class="field">
+                        <label>Фамилия</label>
+                        <input type="text" name="firstName" placeholder="Фамилия" data-ng-model="vm.currentEditUser.FirstName" required tabindex="0" />
+                        <span ng-show="addUserForm.firstName.$touched && addUserForm.firstName.$invalid" class="ui red pointing above ui label">Фамилия</span>
+                    </div>
+
+                    <div class="field">
+                        <label>Имя</label>
+                        <input type="text" name="lastName" placeholder="Имя" data-ng-model="vm.currentEditUser.LastName" required tabindex="0" />
+                        <span ng-show="addUserForm.lastName.$touched && addUserForm.lastName.$invalid" class="ui red pointing above ui label">Имя</span>
+                    </div>
+
+                    <div class="field">
+                        <label>Отчество</label>
+                        <input type="text" name="middleName" placeholder="Отчество" data-ng-model="vm.currentEditUser.MiddleName" required tabindex="0" />
+                        <span ng-show="addUserForm.middleName.$touched && addUserForm.middleName.$invalid" class="ui red pointing above ui label">Отчество</span>
+                    </div>
+                </div>
+
+                <div class="two fields" ng-class="{'error': addUserForm.Login.$dirty && addUserForm.Login.$invalid}">
+                    <div class="field">
+                        <label>Логин</label>
+                        <input type="text" name="Login" placeholder="Логин" data-ng-model="vm.currentEditUser.Login" required tabindex="0" />
+                        <span ng-show="addUserForm.Login.$touched && addUserForm.Login.$invalid" class="ui red pointing above ui label">Логин</span>
+                    </div>
+
+                    <div class="field">
+                        <label>Пароль</label>
+                        <input type="password" name="Password" placeholder="Пароль" data-ng-model="vm.currentEditUser.Password" required tabindex="0" />
+                        <span ng-show="addUserForm.Password.$touched && addUserForm.Password.$invalid" class="ui red pointing above ui label">Пароль</span>
+                    </div>
+                </div>
+
+                <div class="two fields" ng-class="{'error': addUserForm.Phone.$dirty && addUserForm.Phone.$invalid}">
+                    <div class="field">
+                        <label>Телефон</label>
+                        <input type="text" name="Phone" placeholder="Телефон" data-ng-model="vm.currentEditUser.Phone" required tabindex="0" />
+                        <span ng-show="addUserForm.Phone.$touched && addUserForm.Phone.$invalid" class="ui red pointing above ui label">Телефон</span>
+                    </div>
+                </div>
+
+                <div class="two fields" ng-class="{'error': addUserForm.BranchName.$dirty && addUserForm.BranchName.$invalid}">
+                    <div class="field">
+                        <label>Точки</label>
+                        <dropdown name="BranchName" open="false"
+                                  ng-model="vm.currentEditUser.BranchName"
+                                  required>
+                            <dropdown-group data-value="model.Id" data-title="model.Name" ng-repeat="model in vm.activeBranches track by model.Id">{{model.Name}}</dropdown-group>
+                        </dropdown>
+                        <span ng-show="addUserForm.BranchName.$touched && addUserForm.BranchName.$invalid" class="ui red pointing above ui label">Точки</span>
+                    </div>
+                </div>
+
+                <!--<div class="field" ng-class="{'error': addTobaccoForm.categoryName.$dirty && addTobaccoForm.categoryName.$invalid}">
+                    <div class="ui input">
+
+                    </div>
+                </div>-->
+
+                <!--<div class="ui message" ng-class="vm.message.status == 'error' ? 'error' : 'success'"
+                     style="display:block;"
+                     data-ng-show="vm.message.code != ''">{{ vm.message.status }}: {{ vm.message.code }}</div>-->
+
+            </form>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="one fluid ui buttons">
+            <button type="submit"
+                    ng-disabled="addUserForm.$invalid || !addUserForm.$dirty"
+                    ng-click="vm.putUser()"
+                    class="ui positive right labeled icon button">
+                Добавить
+            </button>
+        </div>
+    </div>
+</modal>
 
 <script src="Content/js/admin.js"></script> 

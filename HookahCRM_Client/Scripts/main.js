@@ -17,6 +17,8 @@ require(
         'hookahCRMapp/services/salesService',
         'hookahCRMapp/services/branchService',
         'hookahCRMapp/services/storageService',
+        'hookahCRMapp/services/expendableService',
+        'hookahCRMapp/services/additionService',
         'hookahCRMapp/controllers/navbarController',
         'hookahCRMapp/controllers/reportBlankController'
     ],

@@ -2,12 +2,14 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$scope', '$location', 'authService', '$rootScope', 'toastr', 'tobaccoService', 'storageService'];
+    var injectParams = ['$scope', '$location', 'authService', '$rootScope', 'toastr', 'tobaccoService', 'storageService', 'expendableService'];
 
-    var ReportBlankController = function ($scope, $location, authService, $rootScope, toastr, tobaccoService, storageService) {
+    var ReportBlankController = function ($scope, $location, authService, $rootScope, toastr, tobaccoService, storageService, expendableService) {
         var vm = this;
 
         vm.tobaccoList = {};
+        vm.additionList = {};
+        vm.expendableList = {};
         vm.currentReportBlank = {};
         vm.showSelectStorageModal = false;
         vm.showSelectStorageModalTemp = false;
@@ -15,7 +17,7 @@ define(['app'], function (app) {
         vm.isCloseRepot = false;
 
         function init() {
-            storageService.getReportBlank(vm.currentBranch().StorageId, vm.isCloseRepot).then(function (data) {
+            storageService.getReportBlank(vm.currentBranch().Id, vm.isCloseRepot).then(function (data) {
                 console.log(data);
 
                 if ((data[0] === null && data[1] === null) || (!data[0].IsClosed && vm.isCloseRepot)) {
@@ -49,15 +51,35 @@ define(['app'], function (app) {
 
                         console.log(vm.currentReportBlank);
                     });
+
+                    expendableService.getActiveExpendable().then(function (value) {
+                        vm.expendableList = value;
+                        console.info(vm.expendableList);
+
+                        vm.currentReportBlank[1] = {};
+                        angular.forEach(value, function (data) {
+                            vm.currentReportBlank[1][data.ExpendableType] = {};
+                            vm.currentReportBlank[1][data.ExpendableType][data.Id];
+                        });
+
+                        if (data[1] !== null) {
+                            angular.forEach(data[1].StorageExpendableListCount, function (key, val) {
+                                vm.currentReportBlank[1][key.Expendable.ExpendableType][key.Expendable.Id] = key.Count;
+                            });
+                        }
+                    });
                 }
                 else {
+                    if ((data[0].IsClosed && vm.isCloseRepot))
+                        toastr.warning('Склад уже закрыт!', 'Информация');
+
                     vm.showSelectStorageModal = false;
                 }
             });
         };
 
         vm.insertReportStorageBlank = function (isClose) {
-            storageService.putReportBlank(vm.currentReportBlank, vm.currentBranch().StorageId, vm.isCloseRepot).then(function (value) {
+            storageService.putReportBlank(vm.currentReportBlank, vm.currentBranch().Id, vm.isCloseRepot).then(function (value) {
                 if (!vm.isCloseRepot)
                     toastr.info('Бланк отчётности сохранён! Удачного рабочего дня!', 'Информация');
                 else
