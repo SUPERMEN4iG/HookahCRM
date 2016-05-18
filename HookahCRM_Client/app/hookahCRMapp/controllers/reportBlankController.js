@@ -58,13 +58,18 @@ define(['app'], function (app) {
 
                         vm.currentReportBlank[1] = {};
                         angular.forEach(value, function (data) {
-                            vm.currentReportBlank[1][data.ExpendableType] = {};
-                            vm.currentReportBlank[1][data.ExpendableType][data.Id];
+
+                        	if (vm.currentReportBlank[1][data.Type] === undefined)
+                        		vm.currentReportBlank[1][data.Type] = {};
+
+                            vm.currentReportBlank[1][data.Type][data.Id] = 0;
                         });
+
+                        console.log(vm.currentReportBlank[1]);
 
                         if (data[1] !== null) {
                             angular.forEach(data[1].StorageExpendableListCount, function (key, val) {
-                                vm.currentReportBlank[1][key.Expendable.ExpendableType][key.Expendable.Id] = key.Count;
+                                vm.currentReportBlank[1][key.Expendable.Type][key.Expendable.Id] = key.Count;
                             });
                         }
                     });

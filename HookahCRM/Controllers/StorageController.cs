@@ -126,10 +126,10 @@ namespace HookahCRM.Controllers
         [HttpPut]
         public HttpResponseMessage Put(PutReportBlank obj)
         {
-            Dictionary<string, Dictionary<string, string>> hookah;
-            obj.model.TryGetValue("0", out hookah);
-            Dictionary<string, Dictionary<string, string>> expendable;
-            obj.model.TryGetValue("1", out expendable);
+            Dictionary<string, Dictionary<string, string>> hookahList;
+            obj.model.TryGetValue("0", out hookahList);
+            Dictionary<string, Dictionary<string, string>> expendableList;
+            obj.model.TryGetValue("1", out expendableList);
 
             D_Storage d_storage = _session.QueryOver<D_Storage>()
                 .List()
@@ -149,7 +149,7 @@ namespace HookahCRM.Controllers
             stHookahModel.IsClosed = obj.isClose;
             stHookahModel.StorageId = storageModel.Id;
 
-            foreach (var tobacco in hookah)
+            foreach (var tobacco in hookahList)
             {
                 foreach (var tobaccoStyle in tobacco.Value)
                 {
@@ -161,6 +161,26 @@ namespace HookahCRM.Controllers
             }
 
             storageModel.StorageHookah.Add(stHookahModel);
+
+			StorageExpendableModel stExpendableModel = new StorageExpendableModel();
+			stExpendableModel.StorageExpendableListCount = new List<StorageExpendableCountModel>();
+			stExpendableModel.Worker = new UserModel().Bind(d_userCurrent);
+			stExpendableModel.IsClosed = obj.isClose;
+			stExpendableModel.StorageId = storageModel.Id;
+
+			foreach (var expendable in expendableList)
+			{
+				foreach (var expendableValue in expendable.Value)
+				{
+					stExpendableModel.StorageExpendableListCount.Add(new StorageExpendableCountModel() {
+						Expendable = new ExpendableModel().Bind(_session.QueryOver<D_Expendable>().Where(x => x.Id == long.Parse(expendableValue.Key)).List().FirstOrDefault()),
+						Count = decimal.Parse(expendableValue.Value)
+					});
+				}
+			}
+
+			storageModel.StorageExpendable.Add(stExpendableModel);
+
             //storageModel.Branch.StorageId = storageModel.Id;
             //storageModel.Branch.Workers = new List<UserModel>();
             //storageModel.Branch.Workers.Add(stHookahModel.Worker);

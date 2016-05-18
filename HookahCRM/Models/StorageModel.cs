@@ -151,7 +151,9 @@ namespace HookahCRM.Models
 
     public class StorageExpendableModel : AbstractDataModel<D_StorageExpendable, StorageExpendableModel>, IReportBlankModel
     {
-        public UserModel Worker { get; set; }
+		public StorageModel Storage { get; set; }
+		public long? StorageId { get; set; }
+		public UserModel Worker { get; set; }
         public bool IsClosed { get; set; }
         public IList<StorageExpendableCountModel> StorageExpendableListCount { get; set; }
 
@@ -162,7 +164,8 @@ namespace HookahCRM.Models
 
             base.Bind(@object);
 
-            this.Worker = new UserModel().Bind(@object.Worker);
+			this.StorageId = @object.Storage.Id;
+			this.Worker = new UserModel().Bind(@object.Worker);
             this.IsClosed = @object.IsClosed;
             this.StorageExpendableListCount = @object.StorageExpendableListCount.Select(x => { return new StorageExpendableCountModel().Bind(x); }).ToList();
 
@@ -176,11 +179,12 @@ namespace HookahCRM.Models
 
             @object = base.UnBind(@object);
 
-            @object.Worker = _session.QueryOver<D_User>().Where(x => x.Id == this.Worker.Id).List().FirstOrDefault();
+			@object.Worker = _session.QueryOver<D_User>().Where(x => x.Id == this.Worker.Id).List().FirstOrDefault();
             @object.IsClosed = this.IsClosed;
             @object.StorageExpendableListCount = this.StorageExpendableListCount.Select(x => { return x.UnBind(); }).ToList();
+			@object.Storage = _session.QueryOver<D_Storage>().Where(x => x.Id == this.StorageId).List().LastOrDefault();
 
-            return @object;
+			return @object;
         }
     }
 
@@ -234,9 +238,11 @@ namespace HookahCRM.Models
 
             @object = base.UnBind(@object);
 
-            var temp = this.StorageHookah.LastOrDefault();
+            var tempHookah = this.StorageHookah.LastOrDefault();
+			var tempExpendable = this.StorageExpendable.LastOrDefault();
 
-            @object.StorageHookah.Add(temp.UnBind());
+            @object.StorageHookah.Add(tempHookah.UnBind());
+			@object.StorageExpendable.Add(tempExpendable.UnBind());
 
             //@object.StorageHookah = this.StorageHookah.Select(x => x.UnBind()).ToList();
 

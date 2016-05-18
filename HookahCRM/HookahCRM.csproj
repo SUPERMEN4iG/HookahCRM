@@ -20,6 +20,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -164,6 +165,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Lib\DataConfigAttribute.cs" />
+    <Compile Include="Lib\Filters\BasicAuthorizeAttribute.cs" />
     <Compile Include="Lib\Filters\ValidationActionFilter.cs" />
     <Compile Include="Lib\Infrastructure\SessionManager.cs" />
     <Compile Include="Lib\Modules\AuthHttpModule.cs" />
