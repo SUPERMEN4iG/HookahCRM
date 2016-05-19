@@ -131,7 +131,7 @@ namespace HookahCRM.DataModel
     {
         public D_Sales()
         {
-            DayHoohahSales = new List<D_DayHoohahSale>();
+            DayHoohahSales = new List<D_DayHookahSale>();
             DayAdditionSales = new List<D_DayAdditionSales>();
         }
 
@@ -148,7 +148,7 @@ namespace HookahCRM.DataModel
         /// <summary>
         /// Продажа в текущий день
         /// </summary>
-        public virtual IList<D_DayHoohahSale> DayHoohahSales { get; set; }
+        public virtual IList<D_DayHookahSale> DayHoohahSales { get; set; }
         public virtual IList<D_DayAdditionSales> DayAdditionSales { get; set; }
     }
 
@@ -160,7 +160,7 @@ namespace HookahCRM.DataModel
 
     public abstract class D_DaySales : D_BaseObject
     {
-        public virtual long Count { get; set; }
+        public virtual decimal Count { get; set; }
         public virtual D_Sales Sales { get; set; }
 
         public virtual ActionType ActionType { get; set; }
@@ -169,7 +169,7 @@ namespace HookahCRM.DataModel
     /// <summary>
     /// Продажа кальяна
     /// </summary>
-    public class D_DayHoohahSale : D_DaySales
+    public class D_DayHookahSale : D_DaySales
     {
         public virtual D_Tobacco Tobacco { get; set; }
     }
@@ -499,9 +499,9 @@ namespace HookahCRM.DataModel
     #endregion
 
     #region Продажи
-    public class D_DayHoohahSales_Map : D_BaseObject_Map<D_DayHoohahSale>
+    public class D_DayHookahSale_Map : D_BaseObject_Map<D_DayHookahSale>
     {
-        public D_DayHoohahSales_Map()
+        public D_DayHookahSale_Map()
         {
             References(x => x.Sales).Column("DayHoohahSales_Id").Cascade.SaveUpdate();
             References(x => x.Tobacco).Column("Tobacco_Id").Cascade.SaveUpdate();

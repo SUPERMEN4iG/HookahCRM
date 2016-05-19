@@ -17,7 +17,7 @@ define(['app'], function (app) {
         vm.isCloseRepot = false;
 
         function init() {
-            storageService.getReportBlank(vm.currentBranch().Id, vm.isCloseRepot).then(function (data) {
+            storageService.getReportBlank(vm.currentBranch.Id, vm.isCloseRepot).then(function (data) {
                 console.log(data);
 
                 if ((data[0] === null && data[1] === null) || (!data[0].IsClosed && vm.isCloseRepot)) {
@@ -46,6 +46,18 @@ define(['app'], function (app) {
                         if (data[0] !== null) {
                         	angular.forEach(data[0].StorageTobaccoList, function (key, val) {
                         		vm.currentReportBlank[0][key.TobaccoStyle.Category.Id][key.TobaccoStyle.Id] = key.Weight;
+                        	});
+                        }
+
+                        if (vm.isCloseRepot)
+                        {
+                        	vm.currentReportBlank[2] = {};
+                        	vm.currentReportBlank[3] = {};
+                        	vm.currentReportBlank[2][0] = {};
+                        	vm.currentReportBlank[3][0] = {};
+                        	angular.forEach(value, function (data) {
+                        		vm.currentReportBlank[2][0][data.Id] = 0;
+                        		vm.currentReportBlank[3][0][data.Id] = 0;
                         	});
                         }
 
@@ -84,7 +96,7 @@ define(['app'], function (app) {
         };
 
         vm.insertReportStorageBlank = function (isClose) {
-            storageService.putReportBlank(vm.currentReportBlank, vm.currentBranch().Id, vm.isCloseRepot).then(function (value) {
+            storageService.putReportBlank(vm.currentReportBlank, vm.currentBranch.Id, vm.isCloseRepot).then(function (value) {
                 if (!vm.isCloseRepot)
                     toastr.info('Бланк отчётности сохранён! Удачного рабочего дня!', 'Информация');
                 else

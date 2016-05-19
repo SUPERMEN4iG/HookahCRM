@@ -10,7 +10,7 @@ define(['app'], function (app) {
         vm.users = [];
         vm.controllerName = "Сотрудники";
         $rootScope.pageName = 'Users';
-        vm.currentBranch = $rootScope.currentBranch();
+        vm.currentBranch = {};
 
         vm.showUserCreateModal = false;
         vm.currentEditUser;
@@ -59,7 +59,7 @@ define(['app'], function (app) {
         	init();
 
         $rootScope.$on('branch:updated', function (event, data) {
-        	vm.currentBranch = data[0];
+        	vm.currentBranch = data;
         	init();
         });
 

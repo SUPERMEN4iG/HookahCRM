@@ -24,7 +24,7 @@ define(['app'], function (app) {
             if (currentBranch == null)
                 return;
 
-            return $filter('filter')(list, { Name: name })[0];
+            return $filter('filter')(list[0], { Name: name })[0];
         };
 
         service.getCurrentBranch = function () {
@@ -32,6 +32,7 @@ define(['app'], function (app) {
         };
 
         service.setCurrentBranch = function (newBranch) {
+        	console.log(newBranch);
             if (newBranch == null)
                 return;
 

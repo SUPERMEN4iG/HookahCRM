@@ -16,6 +16,7 @@ define(['app'], function (app) {
         vm.selectedBranch = null;
         vm.branchActiveList = [];
         vm.showSelectBranchModal = false;
+        vm.currentBranch = {};
         //vm.showSelectStorageModal = false;
 
         authService.getCurrentUser().then(function (response) {
@@ -70,6 +71,8 @@ define(['app'], function (app) {
             branchService.setCurrentBranch(vm.selectedBranch);
             toastr.info('Выбрано заведение ' + vm.selectedBranch, 'Информация');
 
+            console.info(vm.currentBranch);
+
             $rootScope.$broadcast('onSelectBranch', {
                 showSelectStorageModal: true,
                 selectedBranch: vm.currentBranch,
@@ -77,9 +80,13 @@ define(['app'], function (app) {
             });
         };
 
-        vm.currentBranch = function () { return branchService.getCurrentBranch()[0]; };
+        //vm.currentBranch = function () { return branchService.getCurrentBranch()[0]; };
 
-        $rootScope.currentBranch = vm.currentBranch;
+    	//$rootScope.currentBranch = vm.currentBranch;
+
+        $rootScope.$on('branch:updated', function (event, data) {;
+        	vm.currentBranch = data;
+        });
 
         setLoginLogoutState();
 

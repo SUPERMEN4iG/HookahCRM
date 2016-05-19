@@ -6,11 +6,11 @@ using System.Web;
 
 namespace HookahCRM.Models
 {
-    public class DayHookahSaleModel : AbstractDataModel<D_DayHoohahSale, DayHookahSaleModel>, IReportBlankModel
+    public class DayHookahSaleModel : AbstractDataModel<D_DayHookahSale, DayHookahSaleModel>, IReportBlankModel
     {
         public TobaccoModel Tobacco { get; set; }
 
-        public long Count { get; set; }
+        public decimal Count { get; set; }
 
         public SalesModel Sales { get; set; }
 
@@ -18,7 +18,7 @@ namespace HookahCRM.Models
 
         public ActionType ActionType { get; set; }
 
-        public override DayHookahSaleModel Bind(D_DayHoohahSale @object)
+        public override DayHookahSaleModel Bind(D_DayHookahSale @object)
         {
             if (@object == null)
                 throw new ArgumentNullException("@object");
@@ -34,12 +34,13 @@ namespace HookahCRM.Models
             return this;
         }
 
-        public override D_DayHoohahSale UnBind(D_DayHoohahSale @object = null)
+        public override D_DayHookahSale UnBind(D_DayHookahSale @object = null)
         {
             if (@object == null)
-                @object = new D_DayHoohahSale();
+                @object = new D_DayHookahSale();
 
-            @object.Tobacco = this.Tobacco.UnBind();
+			//@object.Tobacco = this.Tobacco.UnBind();
+			@object.Tobacco = _session.QueryOver<D_Tobacco>().Where(x => x.Id == this.Tobacco.Id).List().FirstOrDefault();
             @object.Count = this.Count;
             @object.Sales = _session.QueryOver<D_Sales>().Where(x => x.Id == this.SalesId).List().LastOrDefault();
             @object.ActionType = this.ActionType;
@@ -52,7 +53,7 @@ namespace HookahCRM.Models
     {
         public D_Addition Addition { get; set; }
 
-        public long Count { get; set; }
+        public decimal Count { get; set; }
 
         public SalesModel Sales { get; set; }
         public long? SalesId { get; set; }
@@ -119,8 +120,9 @@ namespace HookahCRM.Models
 
             base.UnBind(@object);
 
-            //@object.Branch = this.Branch.UnBind();
-            @object.Worker = this.Worker.UnBind();
+			//@object.Branch = this.Branch.UnBind();
+			//@object.Worker = this.Worker.UnBind();
+			@object.Worker = _session.QueryOver<D_User>().Where(x => x.Id == this.Worker.Id).List().FirstOrDefault();
             @object.DayHoohahSales = this.DayHookahSales.Select(x => x.UnBind()).ToList();
             @object.DayAdditionSales = this.DayAdditionSales.Select(x => x.UnBind()).ToList();
 

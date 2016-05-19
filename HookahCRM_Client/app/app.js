@@ -61,7 +61,7 @@ define(['hookahCRMapp/services/routeResolver'], function () {
                 .when('/storage', route.resolve('Storage', '', 'vm'))
                 .when('/main', route.resolve('Main', '', 'vm'))
                 .when('/sales/:salesType*?/:advancedParam*?', route.resolve('Sales', '', 'vm', true))
-                .otherwise({ redirectTo: '/users' });
+                .otherwise({ redirectTo: '/main' });
 
             //$routeProvider
             //    //route.resolve() now accepts the convention to use (name of controller & view) as well as the 

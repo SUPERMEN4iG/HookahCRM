@@ -28,7 +28,7 @@
                     <h3>{{ vm.appTitle }}</h3>
                 </div>
                 <div class="item">
-                    <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch().Name }}</h4>
+                    <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch.Name }}</h4>
                     <div class="black two buttons ui">
                         <button class="ui button" ng-click="vm.notFoundClick('Функция пока не доступна...')">
                             <i class="user large icon"></i>
@@ -39,24 +39,23 @@
                         </button>
                     </div>
                 </div>
-                <a class="item" href="#/main">
-                    Главная
-                </a>
-                <a class="item" href="#/sales">
-                    Продажи
-                    <div class="ui label">11</div>
-                </a>
-                <a class="item" href="#/storage">
-                    Склад
-                    <div class="ui label">22</div>
-                </a>
-                <a class="item" href="#/tobacco">
-                    Продукция
-                    <div class="ui label">2</div>
-                </a>
-                <a class="active gray item" href="#/users">
-                    Сотрудники
-                </a>
+				<a class="item" href="#/main">
+					Главная
+				</a>
+				<a class="item" href="#/sales">
+					Продажи
+					<div class="ui label">11</div>
+				</a>
+				<a class="item" href="#/storage">
+					Склад
+					<div class="ui label">22</div>
+				</a>
+				<a class="item" href="#/tobacco">
+					Продукция
+				</a>
+				<a class="item" href="#/users">
+					Сотрудники
+				</a>
                 <!--<a class="active gray item" href="./employees.html">
                     Employees
                 </a>-->
@@ -74,7 +73,7 @@
                             <h3>{{ vm.appTitle }}</h3>
                         </div>
                         <div class="item">
-                            <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch().Name }}</h4>
+                            <h4 class="ui grey header">{{ vm.currentUser.FirstName }} {{ vm.currentUser.LastName }} <br /> {{ vm.currentBranch.Name }}</h4>
                             <div class="black two buttons ui">
                                 <button class="ui button" ng-click="vm.notFoundClick('Функция пока не доступна...')">
                                     <i class="user large icon"></i>
@@ -183,20 +182,50 @@
                                             </accordion-group>
                                         </accordion>
 
-                                        <accordion close="true" ng-if="vm.currentReportBlank[2] !== undefined">
-                                            <accordion-group title="{{ value.Name }}" ng-repeat="(key, value) in vm.tobaccoList">
-                                                <div ng-repeat="tStyle in value.TobaccoList">
-                                                    <label class="transition">{{ tStyle.Name }}</label>
-                                                    <div class="ui right labeled input">
-                                                        <!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
-                                                        <input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[0][value.Id][tStyle.Id]" required>
-                                                        <div class="ui basic label">
-                                                            грамм
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </accordion-group>
+                                        <accordion close="true" ng-if="vm.currentReportBlank[2] !== undefined && vm.isCloseRepot">
+											<accordion-group title="Продажи">
+												<div ng-repeat="tobacco in vm.tobaccoList">
+													<label class="transition">{{ tobacco.Name }}</label>
+													<div class="ui right labeled input">
+														<!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+														<input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[2][0][tobacco.Id]" required>
+														<div class="ui basic label">
+															штук
+														</div>
+													</div>
+												</div>
+											</accordion-group>
                                         </accordion>
+
+										<accordion close="true" ng-if="vm.currentReportBlank[3] !== undefined && vm.isCloseRepot">
+											<accordion-group title="Продажи [Акции]">
+												<div ng-repeat="tobacco in vm.tobaccoList">
+													<label class="transition">{{ tobacco.Name }}</label>
+													<div class="ui right labeled input">
+														<!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+														<input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[3][0][tobacco.Id]" required>
+														<div class="ui basic label">
+															штук
+														</div>
+													</div>
+												</div>
+											</accordion-group>
+										</accordion>
+
+										<accordion close="true" ng-if="vm.currentReportBlank[3] !== undefined">
+											<accordion-group title="Продажи Акции" ng-repeat="(key, value) in vm.salesList">
+												<div ng-repeat="tStyle in value.TobaccoList">
+													<label class="transition">{{ tStyle.Name }}</label>
+													<div class="ui right labeled input">
+														<!-- ng-init="vm.currentReportBlank[0][value.Id][tStyle.Id] = 0" -->
+														<input placeholder="Введите число" type="text" class="transition" value="0" ng-model="vm.currentReportBlank[0][value.Id][tStyle.Id]" required>
+														<div class="ui basic label">
+															штук
+														</div>
+													</div>
+												</div>
+											</accordion-group>
+										</accordion>
 
                                         <!--<div class="field" ng-class="{'error': insertStorageBlank.categoryName.$dirty && addTobaccoForm.categoryName.$invalid}">
                             <div class="ui input">

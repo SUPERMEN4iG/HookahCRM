@@ -10,7 +10,7 @@ namespace HookahCRM.Controllers
 {
     public class BaseApiController : ApiController
     {
-        protected NHibernate.ISession _session = SessionManager.CurrentSession;
+        public NHibernate.ISession _session = SessionManager.CurrentSession;
 
         protected override void Initialize(System.Web.Http.Controllers.HttpControllerContext controllerContext)
         {
@@ -34,7 +34,7 @@ namespace HookahCRM.Controllers
 
     public class BaseController : Controller
     {
-        protected NHibernate.ISession _session = SessionManager.CurrentSession;
+        public NHibernate.ISession _session = SessionManager.CurrentSession;
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)
         {

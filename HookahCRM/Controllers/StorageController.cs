@@ -1,4 +1,5 @@
 ﻿using HookahCRM.DataModel;
+using HookahCRM.Lib.Filters;
 using HookahCRM.Models;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,7 @@ namespace HookahCRM.Controllers
         public bool isClose { get; set; }
     }
 
-    [Authorize]
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_AdministratorRole))]
     public class StorageController : BaseApiController
     {
         [ActionName("Current")]
@@ -72,47 +73,55 @@ namespace HookahCRM.Controllers
 
             if (isClosed)
             {
-                DayHookahSaleModel dsHookahModel = new DayHookahSaleModel().Bind(
-                    _session.QueryOver<D_Branch>()
-                    .Where(x => x.Id == branchId)
-                    .List().LastOrDefault()
-                    .Sales.LastOrDefault().DayHoohahSales
-                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
-                    .ToList()
-                    .LastOrDefault()
-                );
+				//DayHookahSaleModel dsHookahModel = new DayHookahSaleModel().Bind(
+				//    _session.QueryOver<D_Branch>()
+				//    .Where(x => x.Id == branchId)
+				//    .List().LastOrDefault()
+				//    .Sales.LastOrDefault().DayHoohahSales
+				//    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+				//    .ToList()
+				//    .LastOrDefault()
+				//);
+				DayHookahSaleModel dsHookahModel = new DayHookahSaleModel();
 
-                DayAdditionSalesModel dsAdditionModel = new DayAdditionSalesModel().Bind(
-                        _session.QueryOver<D_Branch>()
-                        .Where(x => x.Id == branchId)
-                        .List().LastOrDefault()
-                        .Sales.LastOrDefault().DayAdditionSales
-                        .Where(x => x.CreationDateTime.Date == DateTime.Today)
-                        .ToList()
-                        .LastOrDefault()
-                );
 
-                DayHookahSaleModel dsHookahModelAction = new DayHookahSaleModel().Bind(
-                    _session.QueryOver<D_Branch>()
-                    .Where(x => x.Id == branchId)
-                    .List().LastOrDefault()
-                    .Sales.LastOrDefault().DayHoohahSales
-                    .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
-                    .ToList()
-                    .LastOrDefault()
-                );
+				//DayAdditionSalesModel dsAdditionModel = new DayAdditionSalesModel().Bind(
+				//                    _session.QueryOver<D_Branch>()
+				//                    .Where(x => x.Id == branchId)
+				//                    .List().LastOrDefault()
+				//                    .Sales.LastOrDefault().DayAdditionSales
+				//                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+				//                    .ToList()
+				//                    .LastOrDefault()
+				//            );
 
-                DayAdditionSalesModel dsAdditionModelAction = new DayAdditionSalesModel().Bind(
-                        _session.QueryOver<D_Branch>()
-                        .Where(x => x.Id == branchId)
-                        .List().LastOrDefault()
-                        .Sales.LastOrDefault().DayAdditionSales
-                        .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
-                        .ToList()
-                        .LastOrDefault()
-                );
+				DayAdditionSalesModel dsAdditionModel = new DayAdditionSalesModel();
 
-                listModels.Add(dsHookahModel);
+				//DayHookahSaleModel dsHookahModelAction = new DayHookahSaleModel().Bind(
+				//                _session.QueryOver<D_Branch>()
+				//                .Where(x => x.Id == branchId)
+				//                .List().LastOrDefault()
+				//                .Sales.LastOrDefault().DayHoohahSales
+				//                .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
+				//                .ToList()
+				//                .LastOrDefault()
+				//            );
+				DayHookahSaleModel dsHookahModelAction = new DayHookahSaleModel();
+
+				DayAdditionSalesModel dsAdditionModelAction = new DayAdditionSalesModel();
+
+
+				//DayAdditionSalesModel dsAdditionModelAction = new DayAdditionSalesModel().Bind(
+				//                    _session.QueryOver<D_Branch>()
+				//                    .Where(x => x.Id == branchId)
+				//                    .List().LastOrDefault()
+				//                    .Sales.LastOrDefault().DayAdditionSales
+				//                    .Where(x => x.CreationDateTime.Date == DateTime.Today && x.ActionType == ActionType.FreeHookah)
+				//                    .ToList()
+				//                    .LastOrDefault()
+				//            );
+
+				listModels.Add(dsHookahModel);
                 listModels.Add(dsAdditionModel);
 
                 listModels.Add(dsHookahModelAction);
@@ -131,7 +140,15 @@ namespace HookahCRM.Controllers
             Dictionary<string, Dictionary<string, string>> expendableList;
             obj.model.TryGetValue("1", out expendableList);
 
-            D_Storage d_storage = _session.QueryOver<D_Storage>()
+			Dictionary<string, Dictionary<string, string>> salesList = new Dictionary<string, Dictionary<string, string>>();
+			if (obj.model.ContainsKey("2"))
+				obj.model.TryGetValue("2", out salesList);
+
+			Dictionary<string, Dictionary<string, string>> salesActionList = new Dictionary<string, Dictionary<string, string>>();
+			if (obj.model.ContainsKey("3"))
+				obj.model.TryGetValue("3", out salesActionList);
+
+			D_Storage d_storage = _session.QueryOver<D_Storage>()
                 .List()
                 .Where(x => x.Branch.Id == obj.branchId)
                 .FirstOrDefault();
@@ -187,10 +204,45 @@ namespace HookahCRM.Controllers
 
             //d_storage.Worker = d_userCurrent;
 
-            d_storage = storageModel.UnBind(d_storage);
-            _session.SaveOrUpdate(d_storage);
+			D_Sales d_sales = _session.QueryOver<D_Sales>()
+				.List()
+				.Where(x => x.Branch.Id == obj.branchId)
+				.FirstOrDefault();
 
-            return new HttpResponseMessage(HttpStatusCode.OK);
+			SalesModel salesModel = new SalesModel().Bind(d_sales);
+
+			if (salesList.Count != 0)
+			{
+				foreach (var item in salesList["0"])
+				{
+					salesModel.DayHookahSales.Add(new DayHookahSaleModel()
+					{
+						Tobacco = new TobaccoModel().Bind(_session.QueryOver<D_Tobacco>().Where(x => x.Id == long.Parse(item.Key)).List().FirstOrDefault()),
+						Count = decimal.Parse(item.Value),
+						ActionType = ActionType.None
+					});
+				}
+			}
+
+			if (salesActionList.Count != 0)
+			{
+				foreach (var item in salesActionList["0"])
+				{
+					salesModel.DayHookahSales.Add(new DayHookahSaleModel()
+					{
+						Tobacco = new TobaccoModel().Bind(_session.QueryOver<D_Tobacco>().Where(x => x.Id == long.Parse(item.Key)).List().FirstOrDefault()),
+						Count = decimal.Parse(item.Value),
+						ActionType = ActionType.FreeHookah
+					});
+				}
+			}
+
+			d_storage = storageModel.UnBind(d_storage);
+			_session.SaveOrUpdate(d_storage);
+			d_sales = salesModel.UnBind(d_sales);
+			_session.SaveOrUpdate(d_sales);
+
+			return new HttpResponseMessage(HttpStatusCode.OK);
         }
     }
 }

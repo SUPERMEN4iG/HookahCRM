@@ -86,9 +86,26 @@ namespace HookahCRM.Models
             this.Name = @object.Name;
             this.ShortName = @object.ShortName;
             this.Severity = @object.Severity;
+			this.Country = @object.Country;
             this.TobaccoList = @object.TobaccoList.Select(x => { return new TobaccoStyleModel().Bind(x); }).ToList();
 
             return this;
         }
-    }
+
+		public override D_Tobacco UnBind(D_Tobacco @object = null)
+		{
+			if (@object == null)
+				@object = new D_Tobacco();
+
+			base.UnBind(@object);
+
+			@object.Name = this.Name;
+			@object.ShortName = this.ShortName;
+			@object.Country = this.Country;
+			@object.Severity = this.Severity;
+			@object.TobaccoList = this.TobaccoList.Select(x => { return x.UnBind(); }).ToList();
+
+			return @object;
+		}
+	}
 }

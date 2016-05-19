@@ -1,4 +1,5 @@
 ﻿using HookahCRM.DataModel;
+using HookahCRM.Lib.Filters;
 using HookahCRM.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Web.Http;
 
 namespace HookahCRM.Controllers
 {
-    [Authorize]
+    [BasicAuthorize(typeof(D_AdministratorRole), typeof(D_WorkerRole))]
     public class BranchController : BaseApiController
     {
         [ActionName("ActiveBranchList")]

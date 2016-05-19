@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$location', '$routeParams', 'authService', '$rootScope', 'toastr', '$route', 'storageService', 'tobaccoService'];
+    var injectParams = ['$location', '$routeParams', 'authService', '$rootScope', 'toastr', '$route', 'storageService', 'tobaccoService', 'branchService'];
 
-    var StorageController = function ($location, $routeParams, authService, $rootScope, toastr, $route, storageService, tobaccoService) {
+    var StorageController = function ($location, $routeParams, authService, $rootScope, toastr, $route, storageService, tobaccoService, branchService) {
         var vm = this,
             path = '/';
 
@@ -13,7 +13,7 @@ define(['app'], function (app) {
         $rootScope.pageName = 'Storage';
         vm.controllerName = 'Склад';
         vm.currentStorage;
-        vm.currentBranch = $rootScope.currentBranch();
+        vm.currentBranch = {};
 
         vm.currentStorageGetStateString = function () {
         	var str;
@@ -36,23 +36,23 @@ define(['app'], function (app) {
         vm.closeStorage = function () {
             $rootScope.$broadcast('onSelectBranch', {
                 showSelectStorageModal: true,
-                selectedBranch: $rootScope.currentBranch,
+                selectedBranch: vm.currentBranch,
                 isCloseRepot: true
             });
         };
 
         function init() {
+        	vm.currentBranch = branchService.getCurrentBranch();
         	vm.tobaccoList = tobaccoService.getTobaccoList();
         	storageService.getCurrentStorage(vm.currentBranch.Id).then(function (data) {
         		vm.currentStorage = data;
         	});
         };
 
-        if (vm.currentBranch !== undefined)
-        	init();
+        init();
 
         $rootScope.$on('branch:updated', function (event, data) {
-        	vm.currentBranch = data[0];
+        	vm.currentBranch = data;
         	init();
         });
 
