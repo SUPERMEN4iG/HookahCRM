@@ -2,22 +2,38 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$http', '$rootScope', 'baseApiUrl', '$filter'];
+    var injectParams = ['$http', '$rootScope', 'baseApiUrl', '$filter', '$q'];
 
-    var storageService = function ($http, $rootScope, baseApiUrl, $filter) {
+    var storageService = function ($http, $rootScope, baseApiUrl, $filter, $q) {
         var service = {},
-            serviceBase = baseApiUrl + 'storage/';
+            serviceBase = baseApiUrl + 'storage/',
+            list = [],
+            listReportBlank = [];
 
         service.getReportBlank = function (branchId, isClosed) {
-            return $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
-                function (response) {
-                    return response.data;
+            var deferred = $q.defer();
+
+            if (listReportBlank.length == 0) {
+                $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
+                        function (response) {
+                            deferred.resolve(response.data);
+                            listReportBlank.push(response.data);
+                        },
+                        function (response) {
+                            deferred.reject(response.data);
+                        });
+            }
+            else {
+                angular.forEach(listReportBlank, function (val) {
+                    deferred.resolve(val);
                 });
+            }
+
+            return deferred.promise;
         };
 
         service.putReportBlank = function (obj, branchId, isClose) {
             //$http.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
-            console.log(obj);
             return $http({
                 method: 'PUT',
                 url: serviceBase + 'ReportBlank/',
@@ -33,10 +49,26 @@ define(['app'], function (app) {
     	// 0 - Склад открыт
 		// 1 - Склад закрыт
         service.getCurrentStorage = function (branchId) {
-            return $http.get(serviceBase + 'Current/', { params: { branchId: branchId } }).then(
-				function (response) {
-					return response.data;
-				});
+            var deferred = $q.defer();
+
+            if (list.length == 0) {
+                $http.get(serviceBase + 'Current/', { params: { branchId: branchId } })
+                    .then(
+				        function (response) {
+				            deferred.resolve(response.data);
+				            list.push(response.data);
+				        },
+                        function (response) {
+                            deferred.reject(response.data);
+                        });
+            }
+            else {
+                angular.forEach(list, function (val) {
+                    deferred.resolve(val);
+                });
+            }
+
+            return deferred.promise;
         };
 
         service.getActiveBranchByName = function (name) {
@@ -44,6 +76,11 @@ define(['app'], function (app) {
                 return;
 
             return $filter('filter')(list, { Name: name })[0];
+        };
+
+        service.clear = function () {
+            list.splice(0, list.length);
+            listReportBlank.splice(0, listReportBlank.length);
         };
 
         return service;

@@ -38,7 +38,7 @@
         <div class="content">
             <a class="header">{{obj.FirstName}} {{obj.LastName[0]}}. {{obj.MiddleName[0]}}.</a>
             <div class="meta">
-                <span class="date">Создан {{obj.CreationDateTime | date:'MM/dd/yyyy' }}</span>
+                <span class="date">Создан {{obj.CreationDateTime | date:'dd/MM/yyyy' }}</span>
             </div>
         </div>
         <div class="extra content">
@@ -236,6 +236,16 @@
                             <dropdown-group data-value="model.Id" data-title="model.Name" ng-repeat="model in vm.activeBranches track by model.Id">{{model.Name}}</dropdown-group>
                         </dropdown>
                         <span ng-show="addUserForm.BranchName.$touched && addUserForm.BranchName.$invalid" class="ui red pointing above ui label">Точки</span>
+                    </div>
+
+                    <div class="field">
+                        <label>Роль</label>
+                        <dropdown name="RoleName" open="false"
+                                  ng-model="vm.currentEditUser.RoleName"
+                                  required>
+                            <dropdown-group data-value="model.Role" data-title="model.Name" ng-repeat="model in vm.activeRoles track by model.Role">{{model.Name}}</dropdown-group>
+                        </dropdown>
+                        <span ng-show="addUserForm.RoleName.$touched && addUserForm.RoleName.$invalid" class="ui red pointing above ui label">Точки</span>
                     </div>
                 </div>
 

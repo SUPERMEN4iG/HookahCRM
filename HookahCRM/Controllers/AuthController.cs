@@ -27,12 +27,12 @@ namespace HookahCRM.Controllers
             {
                 if (!System.Web.Helpers.Crypto.VerifyHashedPassword(foundUser.Password, viewModel.Password))
                 {
-                    return Ok(new { success = false, message = "User code or password is incorrect" });
+                    return Ok(new { success = false, message = "Неправильный логин пользователя или пароль" });
                 }
             }
             else
             {
-                return Ok(new { success = false, message = "User not found" });
+                return Ok(new { success = false, message = "Пользователь не найден" });
             }
 
             return Ok(new { success = true });

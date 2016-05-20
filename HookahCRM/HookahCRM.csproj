@@ -153,6 +153,7 @@
     <Compile Include="Controllers\BranchController.cs" />
     <Compile Include="Controllers\ExpendableController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SalesController.cs" />
     <Compile Include="Controllers\SecureDataController.cs" />
     <Compile Include="Controllers\StorageController.cs" />

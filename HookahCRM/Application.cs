@@ -91,7 +91,7 @@ namespace HookahCRM
 
                 D_Tobacco d_tobacco_AF = new D_Tobacco()
                 {
-                    Name = "AlFackher",
+                    Name = "AlFakher",
                     ShortName = "AF",
                     Severity = TobaccoSeverity.Easy,
                     Country = "Арабские эмираты",
@@ -143,8 +143,52 @@ namespace HookahCRM
                     TobaccoList = d_tobaccoList_T
                 };
 
-                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Мятная жевачка", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Апельсин", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Апельсин с кремом", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Арбуз", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Виноград", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Виноград с кремом", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Вишня", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Грейпфрут", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Дыня", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
                 d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Двойное яблоко", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Жвачка", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Клубника", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Лесные ягоды", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Лимон", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Мята", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Мята с кремом", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Персик", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+                d_tobaccoList_AF.Add(new D_TobaccoStyle() { Name = "Черника", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_AF });
+
+                d_tobaccoList_A.Add(new D_TobaccoStyle() { Name = "Кактус", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_A });
+                d_tobaccoList_A.Add(new D_TobaccoStyle() { Name = "Свит берри", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_A });
+                d_tobaccoList_A.Add(new D_TobaccoStyle() { Name = "Love 66", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_A });
+                d_tobaccoList_A.Add(new D_TobaccoStyle() { Name = "Crazy Lemon", Severity = TobaccoSeverity.Middle, Tobacco = d_tobacco_A });
+
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Вишня", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Малина", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Мята", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Персик", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Черника", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+                d_tobaccoList_H.Add(new D_TobaccoStyle() { Name = "Лимон", Severity = TobaccoSeverity.Hard, Tobacco = d_tobacco_H });
+
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Аброзия", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Черничный маффин", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Мандарин зест", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Красные мишки", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Пряный чай", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Белые мишки", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+                d_tobaccoList_F.Add(new D_TobaccoStyle() { Name = "Шоколадное мороженное", Severity = TobaccoSeverity.Easy, Tobacco = d_tobacco_F });
+
+                d_tobaccoList_DS.Add(new D_TobaccoStyle() { Name = "Кола", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_DS });
+                d_tobaccoList_DS.Add(new D_TobaccoStyle() { Name = "Бергамонстр", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_DS });
+
+                d_tobaccoList_T.Add(new D_TobaccoStyle() { Name = "Кашмир гуава", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_T });
+                d_tobaccoList_T.Add(new D_TobaccoStyle() { Name = "Красный грейпфрут", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_T });
+                d_tobaccoList_T.Add(new D_TobaccoStyle() { Name = "Звёздный путь", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_T });
+                d_tobaccoList_T.Add(new D_TobaccoStyle() { Name = "Cane Mint", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_T });
+                d_tobaccoList_T.Add(new D_TobaccoStyle() { Name = "Новый лайм", Severity = TobaccoSeverity.VeryHard, Tobacco = d_tobacco_T });
 
                 d_branch1.HooahPriceDirectory = new List<D_HookahPriceDirectory>()
                 {
@@ -294,7 +338,7 @@ namespace HookahCRM
                     d_adminUser.MiddleName = "Michalovich";
                     d_adminUser.Phone = "+7000000";
                     d_adminUser.Password = Crypto.HashPassword("12345678");
-                    d_adminUser.Roles = new List<D_AbstractRole>() { new D_AdministratorRole() { User = d_adminUser } };
+                    d_adminUser.Roles = new List<D_AbstractRole>() { new D_AdministratorRole() { User = d_adminUser }, new D_WorkerRole() { User = d_adminUser } };
                     d_adminUser.BranchList = new List<D_Branch>();
                     session.SaveOrUpdate(d_adminUser);
 
@@ -311,7 +355,11 @@ namespace HookahCRM
 
                 d_branch1.Workers.Add(d_adminUser);
                 d_branch1.Workers.Add(d_workerUser);
+                d_branch2.Workers.Add(d_adminUser);
+                d_branch3.Workers.Add(d_adminUser);
                 d_adminUser.BranchList.Add(d_branch1);
+                d_adminUser.BranchList.Add(d_branch2);
+                d_adminUser.BranchList.Add(d_branch3);
                 d_workerUser.BranchList.Add(d_branch1);
 
                 session.SaveOrUpdate(d_branch1);
@@ -375,7 +423,52 @@ namespace HookahCRM
 
 				new List<D_Expendable>() { 
                    new D_Expendable() { Name = "Шахта ХМ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Шахта AMY", Type = ExpendableType.Equipment },
                    new D_Expendable() { Name = "Колба ХМ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Колба AMY", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Тарелка ХМ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Чилим глина", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Чилим ОПГ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Чаша фанел фаянс", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Чаша силикон", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Чаша фанел ОПГ", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Калауд", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Шланг классик", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Шланг силикон", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Мундштук металл", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Мундштук гелий", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Плитка эл", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Электро насос", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Ведро для пепла", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Угольница", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Весы", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Тройник", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Доска разделочная", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Нож", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Нож для фруктов", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Ножницы", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Щипцы Б", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Щипцы М", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Ёршик для шахты", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Ёршик для колбы", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Пластик фрукты", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Полотенце", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Шило", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Уплотнитель для шланга", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Уплотнитель для колбы", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Уплотнитель для чаши", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Губка", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Пемос", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Пульт от подсветки", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Подсветка", Type = ExpendableType.Equipment },
+                   new D_Expendable() { Name = "Боксы для КС", Type = ExpendableType.Equipment },
+
+                   new D_Expendable() { Name = "Меню", Type = ExpendableType.OfficeItem },
+                   new D_Expendable() { Name = "Степлер", Type = ExpendableType.OfficeItem },
+                   new D_Expendable() { Name = "Бланки ревизии", Type = ExpendableType.OfficeItem },
+                   new D_Expendable() { Name = "Маркеры", Type = ExpendableType.OfficeItem },
+                   new D_Expendable() { Name = "Бумажный скотч", Type = ExpendableType.OfficeItem },
+
                    new D_Expendable() { Name = "Уголь", Type = ExpendableType.ExpendableMaterial },
                    new D_Expendable() { Name = "Мундштук", Type = ExpendableType.ExpendableMaterial },
                    new D_Expendable() { Name = "Фольга", Type = ExpendableType.ExpendableMaterial }

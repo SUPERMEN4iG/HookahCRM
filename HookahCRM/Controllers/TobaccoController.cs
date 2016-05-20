@@ -38,10 +38,10 @@ namespace HookahCRM.Controllers
             List<TobaccoStyleModel> objList = new List<TobaccoStyleModel>();
 
             objList.AddRange(_session.QueryOver<D_TobaccoStyle>()
-                .Skip(objSend.skip).Take(objSend.take)
                 .List()
                 .Where(x => { return (objSend.idList == null) ? true : objSend.idList.Any(f => f == x.Tobacco.Id); })
-                .Select(x => { return new TobaccoStyleModel().Bind(x); }));
+                .Select(x => { return new TobaccoStyleModel().Bind(x); })
+                .Skip(objSend.skip).Take(objSend.take));
 
             return objList;
         }

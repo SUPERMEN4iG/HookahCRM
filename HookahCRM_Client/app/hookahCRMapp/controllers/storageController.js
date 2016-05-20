@@ -6,7 +6,7 @@ define(['app'], function (app) {
 
     var StorageController = function ($location, $routeParams, authService, $rootScope, toastr, $route, storageService, tobaccoService, branchService) {
         var vm = this,
-            path = '/';
+            path = '/storage';
 
         vm.tobaccoList = [];
 
@@ -49,7 +49,17 @@ define(['app'], function (app) {
         	});
         };
 
-        init();
+        function preInit() {
+            vm.currentBranch = branchService.getCurrentBranch();
+
+            if (vm.currentBranch.Id !== undefined)
+            {
+                init();
+            }
+        };
+
+        preInit();
+        //init();
 
         $rootScope.$on('branch:updated', function (event, data) {
         	vm.currentBranch = data;

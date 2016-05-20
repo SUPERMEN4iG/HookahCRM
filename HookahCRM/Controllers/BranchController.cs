@@ -16,9 +16,11 @@ namespace HookahCRM.Controllers
         [ActionName("ActiveBranchList")]
         public IEnumerable<BranchModel> Get()
         {
-            return _session.QueryOver<D_Branch>()
-                .List()
+            D_User d_currentUser = _session.QueryOver<D_User>().Where(x => x.Login == User.Identity.Name).List().FirstOrDefault();
+
+            return d_currentUser.BranchList
                 .Where(x => x.IsDisabled == false)
+                .Select(o => { return new D_Branch() { Id = o.Id, IsDisabled = o.IsDisabled, Name = o.Name, Workers = o.Workers, Address = o.Address, Guid = o.Guid, CreationDateTime = o.CreationDateTime }; })
                 .Select(ob => { return new BranchModel().Bind(ob); })
                 .ToList();
         }

@@ -2,9 +2,9 @@
 
 define(['app'], function (app) {
 
-	var injectParams = ['$location', '$routeParams', 'authService', 'usersService', '$rootScope', 'branchService', 'toastr'];
+	var injectParams = ['$location', '$routeParams', 'authService', 'usersService', '$rootScope', 'branchService', 'toastr', 'rolesService'];
 
-	var UsersController = function ($location, $routeParams, authService, usersService, $rootScope, branchService, toastr) {
+	var UsersController = function ($location, $routeParams, authService, usersService, $rootScope, branchService, toastr, rolesService) {
         var vm = this;
 
         vm.users = [];
@@ -15,6 +15,7 @@ define(['app'], function (app) {
         vm.showUserCreateModal = false;
         vm.currentEditUser;
         vm.activeBranches = [];
+        vm.activeRoles = [];
 
         vm.openUserCreateModal = function (obj, isEdit) {
             vm.showUserCreateModal = true;
@@ -39,12 +40,16 @@ define(['app'], function (app) {
         function init() {
             getUsers();
             getActiveBranches();
+            getActiveRoles();
         };
 
         function getUsers() {
             usersService.getUsers()
                 .then(function (data) {
                     vm.users = data;
+                },
+                function (data) {
+                    toastr.error(data.data.ExceptionMessage, 'Ошибка');
                 });
         };
 
@@ -52,6 +57,13 @@ define(['app'], function (app) {
             branchService.getActiveBranchList()
                 .then(function (data) {
                     vm.activeBranches = data;
+                });
+        };
+
+        function getActiveRoles() {
+            rolesService.getActiveRoles()
+                .then(function (data) {
+                    vm.activeRoles = data;
                 });
         };
 

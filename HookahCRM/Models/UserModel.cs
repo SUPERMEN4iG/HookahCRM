@@ -31,7 +31,7 @@ namespace HookahCRM.Models
         [Required]
         public string Phone { get; set; }
 
-        [JsonIgnore]
+        //[JsonIgnore]
         public IList<D_AbstractRole> Roles { get; set; }
 
         //[JsonIgnore]
@@ -39,6 +39,9 @@ namespace HookahCRM.Models
 
         [Required]
         public string BranchName { get; set; }
+
+        [Required]
+        public string RoleName { get; set; }
 
         public override UserModel Bind(D_User @object)
         {
@@ -85,7 +88,28 @@ namespace HookahCRM.Models
             if (this.Roles == null)
             {
                 @object.Roles = new List<D_AbstractRole>();
-                @object.Roles.Add(new D_WorkerRole() { User = @object, RoleType = RoleType.Worker });
+                Type roleType = this.RoleName.ToTypeFromName();
+                D_AbstractRole d_role;
+                //object d_role = Activator.CreateInstance(roleType);
+                if (roleType == typeof(D_WorkerRole))
+                {
+                    d_role = new D_WorkerRole() { RoleType = this.RoleName.ToEnumFromName(), User = @object };
+                }
+                else if (roleType == typeof(D_TraineeRole))
+                {
+                    d_role = new D_TraineeRole() { RoleType = this.RoleName.ToEnumFromName(), User = @object };
+                }
+                else if (roleType == typeof(D_AdministratorRole))
+                {
+                    d_role = new D_AdministratorRole() { RoleType = this.RoleName.ToEnumFromName(), User = @object };
+                }
+                else
+                {
+                    d_role = new D_WorkerRole() { RoleType = RoleType.Worker, User = @object };
+                }
+                
+
+                @object.Roles.Add(d_role);
             }
             else
             {

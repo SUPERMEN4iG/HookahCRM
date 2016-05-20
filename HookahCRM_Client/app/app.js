@@ -24,7 +24,7 @@ define(['hookahCRMapp/services/routeResolver'], function () {
         // default values
         var values = {
             isDebug: true,
-            version: '1.0'
+            version: '1.2'
         };
         return {
             $get: function () {

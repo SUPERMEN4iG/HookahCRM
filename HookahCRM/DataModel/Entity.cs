@@ -70,6 +70,14 @@ namespace HookahCRM.DataModel
         }
     }
 
+    public class D_TraineeRole : D_AbstractRole
+    {
+        public D_TraineeRole()
+        {
+            RoleType = DataModel.RoleType.Trainee;
+        }
+    }
+
     public enum RoleType
     {
         Banned = 0,
@@ -77,6 +85,72 @@ namespace HookahCRM.DataModel
         Worker = 2,
         Trainee = 3,
         Manager = 4
+    }
+
+    public static class RoleTypeExtension
+    {
+        public static string ToStringName(this RoleType role)
+        {
+            switch (role)
+            {
+                case RoleType.Banned:
+                    return "Заблокированный";
+                case RoleType.Administrator:
+                    return "Администратор";
+                case RoleType.Worker:
+                    return "Работник";
+                case RoleType.Trainee:
+                    return "Стажёр";
+                case RoleType.Manager:
+                    return "Менеджер";
+                default:
+                    break;
+            }
+
+            return string.Empty;
+        }
+
+        public static Type ToTypeFromName(this string roleName)
+        {
+            switch (roleName)
+            {
+                case "Заблокированный":
+                    return typeof(D_AbstractRole);
+                case "Администратор":
+                    return typeof(D_AdministratorRole);
+                case "Работник":
+                    return typeof(D_WorkerRole);
+                case "Стажёр":
+                    return typeof(D_TraineeRole);
+                case "Менеджер":
+                    return typeof(D_AbstractRole);
+                default:
+                    break;
+            }
+
+            return null;
+        }
+
+        public static RoleType ToEnumFromName(this string roleName)
+        {
+            switch (roleName)
+            {
+                case "Заблокированный":
+                    return RoleType.Banned;
+                case "Администратор":
+                    return RoleType.Administrator;
+                case "Работник":
+                    return RoleType.Worker;
+                case "Стажёр":
+                    return RoleType.Trainee;
+                case "Менеджер":
+                    return RoleType.Manager;
+                default:
+                    break;
+            }
+
+            return RoleType.Banned;
+        }
     }
 
     /// <summary>
@@ -418,6 +492,14 @@ namespace HookahCRM.DataModel
         public D_AdministratorRole_Map()
         {
             DiscriminatorValue(RoleType.Administrator);
+        }
+    }
+
+    public class D_TraineeRole_Map : SubclassMap<D_TraineeRole>
+    {
+        public D_TraineeRole_Map()
+        {
+            DiscriminatorValue(RoleType.Trainee);
         }
     }
     #endregion

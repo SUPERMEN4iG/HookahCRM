@@ -31,7 +31,7 @@ namespace HookahCRM.Models
             this.Name = @object.Name;
             this.Address = @object.Address;
             //this.Storage = new StorageModel().Bind(@object.Storage);
-            this.Storage = new StorageModel().Bind(_session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault());
+            //this.Storage = new StorageModel().Bind(_session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault());
             //this.StorageId = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == @object.Id).List().FirstOrDefault().Id;
 
             return this;
@@ -46,7 +46,7 @@ namespace HookahCRM.Models
 
             @object.Name = this.Name;
             @object.Address = this.Address;
-            @object.Storage = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == Storage.Id).List().FirstOrDefault();
+            //@object.Storage = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == Storage.Id).List().FirstOrDefault();
 
             return @object;
         }

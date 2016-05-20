@@ -75,6 +75,7 @@
     <Content Include="app\hookahCRMapp\services\authService.js" />
     <Content Include="app\hookahCRMapp\services\branchService.js" />
     <Content Include="app\hookahCRMapp\services\expendableService.js" />
+    <Content Include="app\hookahCRMapp\services\rolesService.js" />
     <Content Include="app\hookahCRMapp\services\routeResolver.js" />
     <Content Include="app\hookahCRMapp\services\salesService.js" />
     <Content Include="app\hookahCRMapp\services\storageService.js" />
