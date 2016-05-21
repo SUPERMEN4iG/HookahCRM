@@ -1,5 +1,6 @@
 ﻿using HookahCRM.DataModel;
 using HookahCRM.Lib.Filters;
+using HookahCRM.Lib.Helpers;
 using HookahCRM.Models;
 using Newtonsoft.Json;
 using System;
@@ -19,23 +20,110 @@ namespace HookahCRM.Controllers
         public bool isClose { get; set; }
     }
 
-    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_AdministratorRole))]
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class StorageController : BaseApiController
     {
         [ActionName("Current")]
         public StorageModel Get(long branchId)
         {
-			StorageModel stModel = new StorageModel().Bind(
-					_session.QueryOver<D_Storage>()
-					.Where(x => x.Branch.Id == branchId)
-					.List()
-					.Select(x => {
-						x.StorageExpendable = x.StorageExpendable.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList();
-						x.StorageHookah = x.StorageHookah.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList();
-						return x;
-					})
-					.LastOrDefault()
-				);
+            //StorageModel stModel = new StorageModel().Bind(
+            //        _session.QueryOver<D_Storage>()
+            //        .Where(x => x.Branch.Id == branchId)
+            //        .List()
+            //        .Select(x => 
+            //        {
+            //            x.StorageExpendable = x.StorageExpendable.Where(d => d.CreationDateTime.Date == DateTime.Today).Select(ste =>
+            //            {
+            //                return new D_StorageExpendable()
+            //                {
+            //                    Id = ste.Id,
+            //                    IsDisabled = ste.IsDisabled,
+            //                    IsClosed = ste.IsClosed,
+            //                    Storage = ste.Storage,
+            //                    Worker = ModelHelper.ParseToSmallVersion(ste.Worker),
+            //                    StorageExpendableListCount = ste.StorageExpendableListCount
+            //                    //StorageExpendableListCount = ste.StorageExpendableListCount.Select(stEList => 
+            //                    //{
+            //                    //    return new D_StorageExpendableCount() 
+            //                    //    {
+            //                    //        Id = stEList.Id,
+            //                    //        Expendable = stEList.Expendable,
+            //                    //        Count = stEList.Count
+            //                    //    };
+            //                    //}).ToList()
+            //                };
+            //            }).ToList();
+
+            //            x.StorageHookah = x.StorageHookah.Where(d => d.CreationDateTime.Date == DateTime.Today).Select(sth => 
+            //            {
+            //                return new D_StorageHookah()
+            //                {
+            //                    Id = sth.Id,
+            //                    IsDisabled = sth.IsDisabled,
+            //                    IsClosed = sth.IsClosed,
+            //                    Storage = sth.Storage,
+            //                    Worker = ModelHelper.ParseToSmallVersion(sth.Worker),
+            //                    StorageTobaccoList = sth.StorageTobaccoList
+            //                    //StorageTobaccoList = sth.StorageTobaccoList.Select(stHList => 
+            //                    //{
+            //                    //    return new D_StorageHookahStyle()
+            //                    //    {
+            //                    //        Id = stHList.Id,
+            //                    //        TobaccoStyle = stHList.TobaccoStyle,
+            //                    //        Weight = stHList.Weight
+            //                    //    };
+            //                    //}).ToList()
+            //                }; 
+            //            }).ToList();
+
+            //            return x;
+            //        })
+            //        .LastOrDefault()
+            //    );
+
+            D_Storage d_storage = _session.QueryOver<D_Storage>().Where(x => x.Branch.Id == branchId).List().LastOrDefault();
+
+            IList<D_StorageExpendable> stExpedableList = _session
+                .QueryOver<D_StorageExpendable>()
+                .Where(x => x.Storage.Id == d_storage.Id)
+                .List()
+                .Select(ste => 
+                {
+                    return new D_StorageExpendable() 
+                    {
+                        Id = ste.Id,
+                        IsClosed = ste.IsClosed,
+                        CreationDateTime = ste.CreationDateTime,
+                        Worker = ModelHelper.ParseToSmallVersion(ste.Worker),
+                        Storage = new D_Storage() { Id = ste.Storage.Id, IsDisabled = ste.Storage.IsDisabled },
+                        StorageExpendableListCount = new List<D_StorageExpendableCount>(),
+                    };
+                }).ToList();
+
+
+            IList<D_StorageHookah> stHookahList = _session
+                .QueryOver<D_StorageHookah>()
+                .Where(x => x.Storage.Id == d_storage.Id)
+                .List()
+                .Select(ste =>
+                {
+                    return new D_StorageHookah()
+                    {
+                        Id = ste.Id,
+                        IsClosed = ste.IsClosed,
+                        CreationDateTime = ste.CreationDateTime,
+                        Worker = ModelHelper.ParseToSmallVersion(ste.Worker),
+                        Storage = new D_Storage() { Id = ste.Storage.Id, IsDisabled = ste.Storage.IsDisabled },
+                        StorageTobaccoList = new List<D_StorageHookahStyle>(),
+                    };
+                }).ToList();
+
+            StorageModel stModel = new StorageModel().Bind(new D_Storage() 
+            {
+                StorageExpendable = stExpedableList.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList(),
+                StorageHookah = stHookahList.Where(d => d.CreationDateTime.Date == DateTime.Today).ToList(),
+                Worker = ModelHelper.ParseToSmallVersion(d_storage.Worker)
+            });
 
 			return stModel;
         }
@@ -54,6 +142,16 @@ namespace HookahCRM.Controllers
                     .List().LastOrDefault()
                     .Storage.StorageHookah
                     .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .Select(obj =>
+                    {
+                        return new D_StorageHookah()
+                        {
+                            Id = obj.Id,
+                            Worker = ModelHelper.ParseToSmallVersion(obj.Worker),
+                            Storage = new D_Storage() { Id = obj.Storage.Id },
+                            StorageTobaccoList = obj.StorageTobaccoList
+                        };
+                    })
                     .ToList()
                     .LastOrDefault()
                 );
@@ -64,9 +162,39 @@ namespace HookahCRM.Controllers
                     .List().LastOrDefault()
                     .Storage.StorageExpendable
                     .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .Select(obj =>
+                    {
+                        return new D_StorageExpendable()
+                        {
+                            Id = obj.Id,
+                            Worker = ModelHelper.ParseToSmallVersion(obj.Worker),
+                            Storage = new D_Storage() { Id = obj.Storage.Id },
+                            StorageExpendableListCount = obj.StorageExpendableListCount
+                        };
+                    })
                     .ToList()
                     .LastOrDefault()
                 );
+
+            //StorageHookahModel stHookahModel = new StorageHookahModel().Bind(
+            //        _session.QueryOver<D_Branch>()
+            //        .Where(x => x.Id == branchId)
+            //        .List().LastOrDefault()
+            //        .Storage.StorageHookah
+            //        .Where(x => x.CreationDateTime.Date == DateTime.Today)
+            //        .ToList()
+            //        .LastOrDefault()
+            //    );
+
+            //StorageExpendableModel stExpendableModel = new StorageExpendableModel().Bind(
+            //        _session.QueryOver<D_Branch>()
+            //        .Where(x => x.Id == branchId)
+            //        .List().LastOrDefault()
+            //        .Storage.StorageExpendable
+            //        .Where(x => x.CreationDateTime.Date == DateTime.Today)
+            //        .ToList()
+            //        .LastOrDefault()
+            //    );
 
             listModels.Add(stHookahModel);
             listModels.Add(stExpendableModel);

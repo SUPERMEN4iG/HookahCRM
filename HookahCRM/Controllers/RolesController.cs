@@ -18,7 +18,7 @@ namespace HookahCRM.Controllers
        public String Name { get; set; }
     }
 
-    [BasicAuthorize(typeof(D_AdministratorRole))]
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class RolesController : BaseApiController
     {
         [ActionName("ActiveRolesList")]

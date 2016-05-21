@@ -18,7 +18,7 @@ define(['app'], function (app) {
         vm.currentStorageGetStateString = function () {
         	var str;
 
-        	if (vm.currentStorage != null) {
+        	if (vm.currentStorage != null && vm.currentStorage.StorageHookah.length != 0) {
         		console.log(vm.currentStorage.StorageHookah);
         		angular.forEach(vm.currentStorage.StorageHookah, function (val) {
         			if (val.IsClosed)

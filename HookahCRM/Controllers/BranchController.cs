@@ -10,7 +10,7 @@ using System.Web.Http;
 
 namespace HookahCRM.Controllers
 {
-    [BasicAuthorize(typeof(D_AdministratorRole), typeof(D_WorkerRole))]
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class BranchController : BaseApiController
     {
         [ActionName("ActiveBranchList")]

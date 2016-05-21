@@ -13,8 +13,23 @@ define(['app'], function (app) {
         service.getReportBlank = function (branchId, isClosed) {
             var deferred = $q.defer();
 
-            if (listReportBlank.length == 0) {
-                $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
+            //if (listReportBlank.length == 0) {
+            //    $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
+            //            function (response) {
+            //                deferred.resolve(response.data);
+            //                listReportBlank.push(response.data);
+            //            },
+            //            function (response) {
+            //                deferred.reject(response.data);
+            //            });
+            //}
+            //else {
+            //    angular.forEach(listReportBlank, function (val) {
+            //        deferred.resolve(val);
+            //    });
+            //}
+
+            $http.get(serviceBase + 'ReportBlank/', { params: { branchId: branchId, isClosed: isClosed } }).then(
                         function (response) {
                             deferred.resolve(response.data);
                             listReportBlank.push(response.data);
@@ -22,12 +37,6 @@ define(['app'], function (app) {
                         function (response) {
                             deferred.reject(response.data);
                         });
-            }
-            else {
-                angular.forEach(listReportBlank, function (val) {
-                    deferred.resolve(val);
-                });
-            }
 
             return deferred.promise;
         };
@@ -51,8 +60,24 @@ define(['app'], function (app) {
         service.getCurrentStorage = function (branchId) {
             var deferred = $q.defer();
 
-            if (list.length == 0) {
-                $http.get(serviceBase + 'Current/', { params: { branchId: branchId } })
+            //if (list.length == 0) {
+            //    $http.get(serviceBase + 'Current/', { params: { branchId: branchId } })
+            //        .then(
+			//	        function (response) {
+			//	            deferred.resolve(response.data);
+			//	            list.push(response.data);
+			//	        },
+            //            function (response) {
+            //                deferred.reject(response.data);
+            //            });
+            //}
+            //else {
+            //    angular.forEach(list, function (val) {
+            //        deferred.resolve(val);
+            //    });
+            //}
+
+            $http.get(serviceBase + 'Current/', { params: { branchId: branchId } })
                     .then(
 				        function (response) {
 				            deferred.resolve(response.data);
@@ -61,12 +86,6 @@ define(['app'], function (app) {
                         function (response) {
                             deferred.reject(response.data);
                         });
-            }
-            else {
-                angular.forEach(list, function (val) {
-                    deferred.resolve(val);
-                });
-            }
 
             return deferred.promise;
         };

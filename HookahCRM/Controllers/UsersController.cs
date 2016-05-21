@@ -1,6 +1,7 @@
 ﻿using HookahCRM.DataModel;
 using HookahCRM.Lib.Filters;
 using HookahCRM.Models;
+using HookahCRM.Lib.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,12 @@ namespace HookahCRM.Controllers
     {
         // GET api/<controller>
         [ActionName("List")]
-        public IEnumerable<UserModel> Get()
+        public IList<UserModel> Get()
         {
-            IEnumerable<UserModel> listUsers = _session.QueryOver<D_User>().Take(10).List().Select(x => { return new UserModel().Bind(x); });
+            IList<UserModel> listUsers = _session.QueryOver<D_User>().Take(10).List().Select(x => 
+            {
+                return new UserModel().Bind(ModelHelper.ParseToSmallVersion(x));
+            }).ToList();
 
             return listUsers;
         }

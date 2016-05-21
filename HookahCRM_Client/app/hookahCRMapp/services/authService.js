@@ -2,12 +2,13 @@
 
 define(['app'], function (app) {
 
-    var injectParams = ['$http', '$rootScope', '$cookieStore', 'Base64', 'baseApiUrl'];
+    var injectParams = ['$http', '$rootScope', '$cookieStore', 'Base64', 'baseApiUrl', '$cacheFactory'];
 
-    var authFactory = function ($http, $rootScope, $cookieStore, Base64, baseApiUrl) {
+    var authFactory = function ($http, $rootScope, $cookieStore, Base64, baseApiUrl, $cacheFactory) {
         var service = {};
 
         var currentUser;
+        var userCache = $cacheFactory('userCacheUniq');
 
         service.Login = function (username, password, callback) {
             $http.post(baseApiUrl + 'auth/Login/', { username: username, password: password })
@@ -39,7 +40,7 @@ define(['app'], function (app) {
         };
 
         service.getCurrentUser = function () {
-            return $http.get(baseApiUrl + 'account/user');
+            return $http.get(baseApiUrl + 'account/user', { cache: userCache });
         };
 
         service.ClearCredentials = function () {

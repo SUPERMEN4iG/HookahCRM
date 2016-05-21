@@ -27,6 +27,9 @@ define(['app'], function (app) {
             tobaccoService.getTobaccoList()
                 .then(function (data) {
                     vm.tobacco = data;
+                },
+                function (data) {
+                    toastr.error(data.data.ExceptionMessage, 'Ошибка');
                 });
         };
 
@@ -34,6 +37,9 @@ define(['app'], function (app) {
             tobaccoService.getTobaccoListByCategory(vm.selectedTobacco)
                 .then(function (data) {
                     vm.tobaccoList = data;
+                },
+                function (data) {
+                    toastr.error(data.data.ExceptionMessage, 'Ошибка');
                 });
         };
 
@@ -43,6 +49,9 @@ define(['app'], function (app) {
                     console.log(data);
                     toastr.info('Продукт изменён!', 'Информация');
                     vm.getTobaccosByCategory();
+                },
+                function (data) {
+                    toastr.error(data.data.ExceptionMessage, 'Ошибка');
                 });
         };
 
@@ -58,6 +67,9 @@ define(['app'], function (app) {
                     console.log(response);
                     vm.getTobaccosByCategory();
                     toastr.info('Продукт удалён!', 'Информация');
+                },
+                function (data) {
+                    toastr.error(data.data.ExceptionMessage, 'Ошибка');
                 });
         };
 

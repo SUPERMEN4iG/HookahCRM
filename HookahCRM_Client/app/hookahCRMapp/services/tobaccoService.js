@@ -6,14 +6,30 @@ define(['app'], function (app) {
 
     var tobaccoService = function ($http, $q, baseApiUrl) {
         var factory = {},
-            serviceBase = baseApiUrl + 'tobacco/';
+            serviceBase = baseApiUrl + 'tobacco/',
+            listTobaccoCategory = [];
 
         factory.getTobaccoList = function () {
-            return $http.get(serviceBase + 'TobaccoCategory/').then(
-                function (response) {
-                    console.log(response.data);
-                    return response.data;
+            var deferred = $q.defer();
+
+            if (listTobaccoCategory.length == 0)
+            {
+                $http.get(serviceBase + 'TobaccoCategory/').then(
+                    function (response) {
+                        deferred.resolve(response.data);
+                        listTobaccoCategory.push(response.data);
+                    },
+                    function (response) {
+                        deferred.reject(response.data);
+                    });
+
+            } else {
+                angular.forEach(listTobaccoCategory, function (val) {
+                    deferred.resolve(val);
                 });
+            }
+
+            return deferred.promise;
         };
 
         factory.getTobaccoListByCategory = function (idList) {

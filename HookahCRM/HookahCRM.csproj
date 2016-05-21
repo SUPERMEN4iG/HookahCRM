@@ -40,6 +40,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Calabonga.Xml.Exports">
+      <HintPath>..\packages\XmlExport.0.3.2\lib\net40\Calabonga.Xml.Exports.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.2.0.3.0\lib\net40\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -168,6 +171,7 @@
     <Compile Include="Lib\DataConfigAttribute.cs" />
     <Compile Include="Lib\Filters\BasicAuthorizeAttribute.cs" />
     <Compile Include="Lib\Filters\ValidationActionFilter.cs" />
+    <Compile Include="Lib\Helpers\ModelHelper.cs" />
     <Compile Include="Lib\Infrastructure\SessionManager.cs" />
     <Compile Include="Lib\Modules\AuthHttpModule.cs" />
     <Compile Include="Lib\NhibernateConfiguration.cs" />

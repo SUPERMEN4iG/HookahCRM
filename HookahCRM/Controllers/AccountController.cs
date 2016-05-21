@@ -8,20 +8,22 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using HookahCRM.Lib.Helpers;
 
 namespace HookahCRM.Controllers
 {
-    [Authorize]
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class AccountController : BaseApiController
     {
         [ActionName("user")]
         public UserModel Get()
         {
-            UserModel user = _session.QueryOver<D_User>()
+            UserModel user = new UserModel().Bind(
+                _session.QueryOver<D_User>()
                 .Where(x => x.Login == User.Identity.Name)
                 .List()
-                .Select(x => { return new UserModel().Bind(x); })
-                .FirstOrDefault();
+                .Select(obj => ModelHelper.ParseToSmallVersion(obj))
+                .FirstOrDefault());
 
             return user;
         }

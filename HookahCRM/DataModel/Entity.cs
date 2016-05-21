@@ -27,6 +27,8 @@ namespace HookahCRM.DataModel
         public virtual Guid Guid { get; set; }
         public virtual DateTime CreationDateTime { get; set; }
         public virtual bool IsDisabled { get; set; }
+        public virtual Guid? Id_UserDelete { get; set; }
+        public virtual DateTime? DeleteDateTime { get; set; }
     }
 
     public class D_User : D_BaseObject 
@@ -48,7 +50,7 @@ namespace HookahCRM.DataModel
         public virtual IList<D_Branch> BranchList { get; set; }
     }
 
-    public abstract class D_AbstractRole : D_BaseObject
+    public class D_AbstractRole : D_BaseObject
     {
         public virtual D_User User { get; set; }
         public virtual RoleType RoleType { get; set; }
@@ -448,6 +450,9 @@ namespace HookahCRM.DataModel
 
             Map(x => x.CreationDateTime).Not.Nullable();
             Map(x => x.IsDisabled).Default("0").Not.Nullable();
+
+            Map(x => x.Id_UserDelete).Nullable();
+            Map(x => x.DeleteDateTime).Nullable();
         }
     }
 

@@ -17,6 +17,7 @@ namespace HookahCRM.Controllers
         public List<int> idList { get; set; }
     }
 
+    [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class TobaccoController : BaseApiController
     {
 
@@ -27,12 +28,36 @@ namespace HookahCRM.Controllers
 
             objList.AddRange(_session.QueryOver<D_Tobacco>()
                 .List()
+                .Select(obj => 
+                {
+                    return new D_Tobacco()
+                    {
+                        Id = obj.Id,
+                        Name = obj.Name,
+                        Country = obj.Country,
+                        Severity = obj.Severity,
+                        ShortName = obj.ShortName,
+                        TobaccoList = obj.TobaccoList.Select(tList => 
+                        {
+                            return new D_TobaccoStyle() 
+                            {
+                                Id = tList.Id,
+                                IsDisabled = tList.IsDisabled,
+                                Name = tList.Name,
+                                Severity = tList.Severity,
+                                CreationDateTime = tList.CreationDateTime,
+                                Tobacco = new D_Tobacco()
+                            };
+                        }).ToList()
+                    };
+                })
                 .Select(x => { return new TobaccoModel().Bind(x); }));
 
             return objList;
         }
 
         [ActionName("TobaccoStyle")]
+        [BasicAuthorize(typeof(D_AdministratorRole))]
         public IList<TobaccoStyleModel> Get([FromUri]GetTobaccoStyleModelList objSend)
         {
             List<TobaccoStyleModel> objList = new List<TobaccoStyleModel>();
@@ -47,6 +72,7 @@ namespace HookahCRM.Controllers
         }
 
         [ActionName("TobaccoStyle")]
+        [BasicAuthorize(typeof(D_AdministratorRole))]
         [HttpPut]
         public HttpResponseMessage Put([FromBody]TobaccoStyleModel model)
         {
@@ -67,6 +93,7 @@ namespace HookahCRM.Controllers
         }
 
         [ActionName("TobaccoStyle")]
+        [BasicAuthorize(typeof(D_AdministratorRole))]
         [HttpDelete]
         public HttpResponseMessage Delete(int id)
         {
