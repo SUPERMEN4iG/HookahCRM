@@ -1,4 +1,4 @@
-﻿using Calabonga.Xml.Exports;
+﻿//using Calabonga.Xml.Exports;
 using HookahCRM.Models;
 using System;
 using System.Collections.Generic;
@@ -15,7 +15,7 @@ namespace HookahCRM.Controllers
         // GET api/values/5
         public IHttpActionResult Get(UserModel viewModel)
         {
-            WordDocument.CreateFromHtml("123", "Dogovor");
+            //WordDocument.CreateFromHtml("123", "Dogovor");
 
             viewModel = new UserModel() { Login = "test", Password = "test" };
 
