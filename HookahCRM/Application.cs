@@ -38,7 +38,7 @@ namespace HookahCRM
             NHibernate.ISession session = SessionManager.CurrentSession;
             //session.BeginTransaction();
 
-            D_Branch d_branch1 = session.QueryOver<D_Branch>().Where(x => x.Name == "Branch1").List().FirstOrDefault();
+            D_Branch d_branch1 = session.QueryOver<D_Branch>().Where(x => x.Name == "Шоколадница Бабефа").List().FirstOrDefault();
 			D_Branch d_branch2, d_branch3;
 
             if (d_branch1 == null)
