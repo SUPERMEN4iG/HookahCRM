@@ -27,6 +27,10 @@
     <button class="ui primary button" ng-click="vm.closeStorage()">
         Закрыть склад
     </button>
+
+    <button class="ui primary button" ng-click="vm.getConsumptionReport()" ng-disabled="vm.currentStorageGetStateString() !== 'Закрыт'">
+        Отчёт по расходам КС
+    </button>
 </div>
 
 <!--<div class="twelve wide sales column">

@@ -15,6 +15,10 @@ define(['app'], function (app) {
         vm.currentStorage;
         vm.currentBranch = {};
 
+        vm.getConsumptionReport = function () {
+            storageService.getConsumptionReport(vm.currentBranch.Id);
+        };
+
         vm.currentStorageGetStateString = function () {
         	var str;
 

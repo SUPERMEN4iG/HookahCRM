@@ -10,6 +10,15 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+using System.IO;
+using DocumentFormat.OpenXml.Packaging;
+
+using DocumentFormat.OpenXml.Spreadsheet;
+using System.IO.Packaging;
+using System.Xml;
+using DocumentFormat.OpenXml;
+using HookahCRM.Lib.Excel;
+using System.Net.Http.Headers;
 
 namespace HookahCRM.Controllers
 {
@@ -23,6 +32,159 @@ namespace HookahCRM.Controllers
     [BasicAuthorize(typeof(D_WorkerRole), typeof(D_TraineeRole), typeof(D_AdministratorRole))]
     public class StorageController : BaseApiController
     {
+        private readonly string _TemplateFile = AppDomain.CurrentDomain.BaseDirectory + "Content\\Templates\\";
+        private readonly string _GeneratedDirectorySource = "Content\\GeneratedDocuments\\";
+        private readonly string _GeneratedDirectoryFile = AppDomain.CurrentDomain.BaseDirectory + "Content\\GeneratedDocuments\\";
+
+        [ActionName("GetReportBlank")]
+        public HttpResponseMessage Get(long branchId, bool val)
+        {
+            //string destinationFile = Path.Combine(_GeneratedDirectoryFile, string.Format("GeneratedDocument_{0}_{1}.docx", DateTime.Today.Date.ToString("dd.MM.yyyy"), Guid.NewGuid()));
+            //string sourceFile = Path.Combine(_TemplateFile, "ReportTemplate.docx");
+            //try
+            //{
+            //    File.Copy(sourceFile, destinationFile, true);
+            //    Package pkg = Package.Open(destinationFile, FileMode.Open, FileAccess.ReadWrite);
+
+            //    Uri uri = new Uri("/word/document.xml", UriKind.Relative);
+            //    PackagePart part = pkg.GetPart(uri);
+
+            //    XmlDocument xmlMainXMLDoc = new XmlDocument();
+            //    xmlMainXMLDoc.Load(part.GetStream(FileMode.Open, FileAccess.Read));
+
+            //    xmlMainXMLDoc.InnerXml = ReplacePlaceHoldersInTemplate("123", xmlMainXMLDoc.InnerXml);
+
+            //    // Open the stream to write document
+            //    StreamWriter partWrt = new StreamWriter(part.GetStream(FileMode.Open, FileAccess.Write));
+            //    //doc.Save(partWrt);
+            //    xmlMainXMLDoc.Save(partWrt);
+
+            //    partWrt.Flush();
+            //    partWrt.Close();
+            //    pkg.Close();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+            //finally
+            //{ 
+            //    //Console.WriteLine(“\nPress Enter to continue…”);
+            //    //Console.ReadLine();
+            //}
+            D_Branch d_branch = _session.QueryOver<D_Branch>().Where(x => x.Id == branchId).List().LastOrDefault();
+            IList<IReportBlankModel> stModel = this.Get(branchId, isClosed: false);
+            IList<IReportBlankModel> stModel2 = this.Get(branchId, isClosed: true);
+            List<TobaccoModel> tobaccoList = new List<TobaccoModel>();
+            tobaccoList.GetTobaccoList(ref _session);
+
+            StorageHookahModel stHookahModelBefore = stModel.ElementAt(0) as StorageHookahModel;
+            StorageExpendableModel stExpendableModelBefore = stModel.ElementAt(1) as StorageExpendableModel;
+            StorageHookahModel stHookahModelAfter = stModel2.ElementAt(0) as StorageHookahModel;
+            StorageExpendableModel stExpendableModelAfter = stModel2.ElementAt(1) as StorageExpendableModel;
+
+            Dictionary<string, Dictionary<string, decimal>> resultDictionary = new Dictionary<string, Dictionary<string, decimal>>();
+
+            foreach (var item in tobaccoList)
+            {
+                var listTobaccoStyle = new Dictionary<string, decimal>();
+
+                foreach (var itemStyle in item.TobaccoList)
+                {
+                    var before = stHookahModelBefore.StorageTobaccoList.Where(x => x.TobaccoStyle.Id == itemStyle.Id).LastOrDefault();
+                    var after = stHookahModelAfter.StorageTobaccoList.Where(x => x.TobaccoStyle.Id == itemStyle.Id).LastOrDefault();
+
+                    listTobaccoStyle.Add(itemStyle.Name, after.Weight - before.Weight);
+                }
+
+                resultDictionary.Add(item.Name, listTobaccoStyle);
+            }
+
+            string realetivePath = string.Format("GeneratedDocument_{0}_{1}.xlsx", DateTime.Today.Date.ToString("dd.MM.yyyy"), Guid.NewGuid());
+            string destinationFile = Path.Combine(_GeneratedDirectoryFile, realetivePath);
+            
+            ReportStorage newReport = new ReportStorage();
+            newReport.BranchName = d_branch.Name;
+            newReport.CreationDateTime = stHookahModelAfter.CreationDateTime.Date.ToString("dd.MM.yyyy");
+            newReport.FIO = stHookahModelBefore.Worker.GetFullName();
+            newReport.ResultDictionary = resultDictionary;
+            newReport.CreatePackage(destinationFile);
+
+            var path = System.Web.HttpContext.Current.Server.MapPath("~/Content/GeneratedDocuments/" + realetivePath);
+            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+            var stream = new FileStream(path, FileMode.Open);
+            result.Content = new StreamContent(stream);
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+            result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
+            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            result.Content.Headers.ContentLength = stream.Length;
+            return result;   
+
+            //try
+            //{
+            //    using (SpreadsheetDocument document = SpreadsheetDocument.Open(destinationFile, true))
+            //    {
+            //        WorkbookPart workbookPart = document.AddWorkbookPart();
+            //        workbookPart.Workbook = new Workbook();
+
+            //        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+            //        worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+            //        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+            //        Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Расход за день" };
+            //        SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+
+            //        SharedStringTablePart sharedStringTablePart1 = workbookPart.AddNewPart<SharedStringTablePart>("rId4");
+            //        GenerateSharedStringTablePart1Content(sharedStringTablePart1);
+
+            //        //Cell refCell = null;
+            //        //foreach (Cell cell in row.Elements<Cell>())
+            //        //{
+            //        //    if (string.Compare(cell.CellReference.Value, "B1", true) > 0)
+            //        //    {
+            //        //        refCell = cell;
+            //        //        break;
+            //        //    }
+            //        //}
+
+            //        //for (uint i = 1; i <= 10; i++)
+            //        //{
+            //        //    Row row;
+            //        //    row = new Row() { RowIndex = i };
+            //        //    sheetData.Append(row);
+
+            //        //    Cell newCell = new Cell() { CellReference = "B" + i };
+            //        //    row.InsertAt(newCell, 0);
+            //        //    //row.InsertAfter(newCell, refCell);
+            //        //    newCell.CellValue = new CellValue((100 * i).ToString());
+            //        //    newCell.DataType = new EnumValue<CellValues>(CellValues.Number);
+            //        //}
+
+            //        sheets.Append(sheet);
+
+            //        workbookPart.Workbook.Save();
+            //    }
+            //}
+            //catch (Exception)
+            //{
+                
+            //    throw;
+            //}
+        }
+
+        private string ReplacePlaceHoldersInTemplate(string toChange, string templateBody)
+        {
+            templateBody = templateBody.Replace("#FIO#", toChange);
+            return templateBody;
+        }
+
+        //private void ReplaceWordStub(string stubReplace, string text, Word.Document wordDocument)
+        //{
+        //    var range = wordDocument.Content;
+        //    range.Find.ClearFormatting();
+        //    range.Find.Execute(FindText: stubReplace, ReplaceWith: text);
+        //}
+
         [ActionName("Current")]
         public StorageModel Get(long branchId)
         {
@@ -141,12 +303,13 @@ namespace HookahCRM.Controllers
                     .Where(x => x.Id == branchId)
                     .List().LastOrDefault()
                     .Storage.StorageHookah
-                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today && x.IsClosed == isClosed)
                     .Select(obj =>
                     {
                         return new D_StorageHookah()
                         {
                             Id = obj.Id,
+                            CreationDateTime = obj.CreationDateTime,
                             Worker = ModelHelper.ParseToSmallVersion(obj.Worker),
                             Storage = new D_Storage() { Id = obj.Storage.Id },
                             StorageTobaccoList = obj.StorageTobaccoList
@@ -161,12 +324,13 @@ namespace HookahCRM.Controllers
                     .Where(x => x.Id == branchId)
                     .List().LastOrDefault()
                     .Storage.StorageExpendable
-                    .Where(x => x.CreationDateTime.Date == DateTime.Today)
+                    .Where(x => x.CreationDateTime.Date == DateTime.Today && x.IsClosed == isClosed)
                     .Select(obj =>
                     {
                         return new D_StorageExpendable()
                         {
                             Id = obj.Id,
+                            CreationDateTime = obj.CreationDateTime,
                             Worker = ModelHelper.ParseToSmallVersion(obj.Worker),
                             Storage = new D_Storage() { Id = obj.Storage.Id },
                             StorageExpendableListCount = obj.StorageExpendableListCount

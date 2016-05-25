@@ -15,8 +15,6 @@ namespace HookahCRM.Controllers
         // GET api/values/5
         public IHttpActionResult Get(UserModel viewModel)
         {
-            //WordDocument.CreateFromHtml("123", "Dogovor");
-
             viewModel = new UserModel() { Login = "test", Password = "test" };
 
             if (!(viewModel.Login == "test" && viewModel.Password == "test"))

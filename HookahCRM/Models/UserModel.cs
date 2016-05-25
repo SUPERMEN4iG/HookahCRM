@@ -128,5 +128,10 @@ namespace HookahCRM.Models
 
             return @object;
         }
+
+        public string GetFullName()
+        {
+            return String.Format("{0}.{1}.{2}", this.FirstName, this.LastName[0], this.MiddleName[0]);
+        }
     }
 }

@@ -102,6 +102,23 @@ define(['app'], function (app) {
             listReportBlank.splice(0, listReportBlank.length);
         };
 
+        service.getConsumptionReport = function (branchId) {
+            window.open(serviceBase + 'GetReportBlank/?branchId=' + branchId + '&val=false', '_blank', '');
+
+            //console.error(branchId);
+            //$http({
+            //    url: serviceBase + 'GetReportBlank/?branchId=' + branchId + '&val=false',
+            //    method: "GET",
+            //    responseType: 'arraybuffer'
+            //}).success(function (data, status, headers, config) {
+            //    var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+            //    var objectUrl = URL.createObjectURL(blob);
+            //    window.open(objectUrl);
+            //}).error(function (data, status, headers, config) {
+            //    //upload failed
+            //});
+        };
+
         return service;
     };
 

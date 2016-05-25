@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using HookahCRM.Lib.Helpers;
 
 namespace HookahCRM.Controllers
 {
@@ -26,32 +27,7 @@ namespace HookahCRM.Controllers
         {
             List<TobaccoModel> objList = new List<TobaccoModel>();
 
-            objList.AddRange(_session.QueryOver<D_Tobacco>()
-                .List()
-                .Select(obj => 
-                {
-                    return new D_Tobacco()
-                    {
-                        Id = obj.Id,
-                        Name = obj.Name,
-                        Country = obj.Country,
-                        Severity = obj.Severity,
-                        ShortName = obj.ShortName,
-                        TobaccoList = obj.TobaccoList.Select(tList => 
-                        {
-                            return new D_TobaccoStyle() 
-                            {
-                                Id = tList.Id,
-                                IsDisabled = tList.IsDisabled,
-                                Name = tList.Name,
-                                Severity = tList.Severity,
-                                CreationDateTime = tList.CreationDateTime,
-                                Tobacco = new D_Tobacco()
-                            };
-                        }).ToList()
-                    };
-                })
-                .Select(x => { return new TobaccoModel().Bind(x); }));
+            objList.GetTobaccoList(ref _session);
 
             return objList;
         }
