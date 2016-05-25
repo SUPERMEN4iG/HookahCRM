@@ -33,7 +33,7 @@ namespace HookahCRM.Controllers
     public class StorageController : BaseApiController
     {
         private readonly string _TemplateFile = AppDomain.CurrentDomain.BaseDirectory + "Content\\Templates\\";
-        private readonly string _GeneratedDirectorySource = "Content\\GeneratedDocuments\\";
+        //private readonly string _GeneratedDirectorySource = "Content\\GeneratedDocuments\\";
         private readonly string _GeneratedDirectoryFile = AppDomain.CurrentDomain.BaseDirectory + "Content\\GeneratedDocuments\\";
 
         [ActionName("GetReportBlank")]
