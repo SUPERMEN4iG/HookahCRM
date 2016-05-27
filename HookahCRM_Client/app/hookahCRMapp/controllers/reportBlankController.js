@@ -31,7 +31,7 @@ define(['app'], function (app) {
                 if (isAdmin)
                     return;
 
-                storageService.getReportBlank(vm.currentBranch.Id, vm.isCloseRepot).then(function (data) {
+                storageService.getReportBlank(vm.currentBranch.Id, false).then(function (data) {
                     //console.log(data);
 
                     if ((data[0] === null && data[1] === null) || (!data[0].IsClosed && vm.isCloseRepot)) {

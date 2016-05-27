@@ -108,69 +108,84 @@ namespace HookahCRM.Controllers
             newReport.CreationDateTime = stHookahModelAfter.CreationDateTime.Date.ToString("dd.MM.yyyy");
             newReport.FIO = stHookahModelBefore.Worker.GetFullName();
             newReport.ResultDictionary = resultDictionary;
-            newReport.CreatePackage(destinationFile);
+            byte[] memArray = newReport.CreatePackage(destinationFile);
 
-            var path = System.Web.HttpContext.Current.Server.MapPath("~/Content/GeneratedDocuments/" + realetivePath);
-            HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-            var stream = new FileStream(path, FileMode.Open);
-            result.Content = new StreamContent(stream);
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
-            result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            result.Content.Headers.ContentLength = stream.Length;
-            return result;   
+			HttpResponseMessage result = null;
+			try
+			{
+				result = Request.CreateResponse(HttpStatusCode.OK);
+				result.Content = new ByteArrayContent(memArray);
+				result.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+				result.Content.Headers.ContentDisposition.FileName = realetivePath;
 
-            //try
-            //{
-            //    using (SpreadsheetDocument document = SpreadsheetDocument.Open(destinationFile, true))
-            //    {
-            //        WorkbookPart workbookPart = document.AddWorkbookPart();
-            //        workbookPart.Workbook = new Workbook();
+				return result;
+			}
+			catch (Exception)
+			{
+				return Request.CreateResponse(HttpStatusCode.Gone);
+			}
 
-            //        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
-            //        worksheetPart.Worksheet = new Worksheet(new SheetData());
+			//var path = System.Web.HttpContext.Current.Server.MapPath("~/Content/GeneratedDocuments/" + realetivePath);
+			//HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
+			//var stream = new FileStream(path, FileMode.Open);
+			//result.Content = new StreamContent(stream);
+			//result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
+			//result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
+			//result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+			//result.Content.Headers.ContentLength = stream.Length;
+			//return result;   
 
-            //        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
-            //        Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Расход за день" };
-            //        SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+			//try
+			//{
+			//    using (SpreadsheetDocument document = SpreadsheetDocument.Open(destinationFile, true))
+			//    {
+			//        WorkbookPart workbookPart = document.AddWorkbookPart();
+			//        workbookPart.Workbook = new Workbook();
 
-            //        SharedStringTablePart sharedStringTablePart1 = workbookPart.AddNewPart<SharedStringTablePart>("rId4");
-            //        GenerateSharedStringTablePart1Content(sharedStringTablePart1);
+			//        WorksheetPart worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+			//        worksheetPart.Worksheet = new Worksheet(new SheetData());
 
-            //        //Cell refCell = null;
-            //        //foreach (Cell cell in row.Elements<Cell>())
-            //        //{
-            //        //    if (string.Compare(cell.CellReference.Value, "B1", true) > 0)
-            //        //    {
-            //        //        refCell = cell;
-            //        //        break;
-            //        //    }
-            //        //}
+			//        Sheets sheets = workbookPart.Workbook.AppendChild(new Sheets());
+			//        Sheet sheet = new Sheet() { Id = workbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = "Расход за день" };
+			//        SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
 
-            //        //for (uint i = 1; i <= 10; i++)
-            //        //{
-            //        //    Row row;
-            //        //    row = new Row() { RowIndex = i };
-            //        //    sheetData.Append(row);
+			//        SharedStringTablePart sharedStringTablePart1 = workbookPart.AddNewPart<SharedStringTablePart>("rId4");
+			//        GenerateSharedStringTablePart1Content(sharedStringTablePart1);
 
-            //        //    Cell newCell = new Cell() { CellReference = "B" + i };
-            //        //    row.InsertAt(newCell, 0);
-            //        //    //row.InsertAfter(newCell, refCell);
-            //        //    newCell.CellValue = new CellValue((100 * i).ToString());
-            //        //    newCell.DataType = new EnumValue<CellValues>(CellValues.Number);
-            //        //}
+			//        //Cell refCell = null;
+			//        //foreach (Cell cell in row.Elements<Cell>())
+			//        //{
+			//        //    if (string.Compare(cell.CellReference.Value, "B1", true) > 0)
+			//        //    {
+			//        //        refCell = cell;
+			//        //        break;
+			//        //    }
+			//        //}
 
-            //        sheets.Append(sheet);
+			//        //for (uint i = 1; i <= 10; i++)
+			//        //{
+			//        //    Row row;
+			//        //    row = new Row() { RowIndex = i };
+			//        //    sheetData.Append(row);
 
-            //        workbookPart.Workbook.Save();
-            //    }
-            //}
-            //catch (Exception)
-            //{
-                
-            //    throw;
-            //}
-        }
+			//        //    Cell newCell = new Cell() { CellReference = "B" + i };
+			//        //    row.InsertAt(newCell, 0);
+			//        //    //row.InsertAfter(newCell, refCell);
+			//        //    newCell.CellValue = new CellValue((100 * i).ToString());
+			//        //    newCell.DataType = new EnumValue<CellValues>(CellValues.Number);
+			//        //}
+
+			//        sheets.Append(sheet);
+
+			//        workbookPart.Workbook.Save();
+			//    }
+			//}
+			//catch (Exception)
+			//{
+
+			//    throw;
+			//}
+		}
 
         private string ReplacePlaceHoldersInTemplate(string toChange, string templateBody)
         {

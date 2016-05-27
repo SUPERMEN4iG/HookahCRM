@@ -17,14 +17,14 @@ define(['hookahCRMapp/services/routeResolver'], function () {
     app.constant('baseApiUrl', 'http://localhost:3470/api/');
     app.constant('DebugConfig', {
         isDebug: true,
-        version: '1.0'
+        version: '1.4'
     });
 
     app.provider('DevelopConstants', function () {
         // default values
         var values = {
             isDebug: true,
-            version: '1.3'
+            version: '1.4'
         };
         return {
             $get: function () {

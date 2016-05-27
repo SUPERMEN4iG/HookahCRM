@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using X14 = DocumentFormat.OpenXml.Office2010.Excel;
 using A = DocumentFormat.OpenXml.Drawing;
+using System.IO;
 
 namespace HookahCRM.Lib.Excel
 {
@@ -136,13 +137,26 @@ namespace HookahCRM.Lib.Excel
 
     public class ReportStorage : BaseReportStorage
     {
-        // Creates a SpreadsheetDocument.
-        public void CreatePackage(string filePath)
+        public byte[] CreatePackage(string filePath)
         {
-            using (SpreadsheetDocument package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
-            {
-                CreateParts(package);
-            }
+			byte[] returnBytes = null;
+
+			using (MemoryStream mem = new MemoryStream())
+			{
+				using (SpreadsheetDocument package = SpreadsheetDocument.Create(mem, SpreadsheetDocumentType.Workbook))
+				{
+					CreateParts(package);
+				}
+
+				returnBytes = mem.ToArray();
+			}
+
+			return returnBytes;
+
+			//using (SpreadsheetDocument package = SpreadsheetDocument.Create(filePath, SpreadsheetDocumentType.Workbook))
+   //         {
+   //             CreateParts(package);
+   //         }
         }
 
         // Adds child parts and generates content of the specified part.
