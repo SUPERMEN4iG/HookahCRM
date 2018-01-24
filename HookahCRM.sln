@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookahCRM", "HookahCRM\HookahCRM.csproj", "{70EDECAF-B1C6-4BA7-8DB2-7043B75C28A8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HookahCRM_Client", "HookahCRM_Client\HookahCRM_Client.csproj", "{88AE4AE4-ED57-4FBD-B898-55357BB5E618}"
+	ProjectSection(ProjectDependencies) = postProject
+		{70EDECAF-B1C6-4BA7-8DB2-7043B75C28A8} = {70EDECAF-B1C6-4BA7-8DB2-7043B75C28A8}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2834A1CB-1337-4023-8A91-AD1081B54014}
 	EndGlobalSection
 EndGlobal

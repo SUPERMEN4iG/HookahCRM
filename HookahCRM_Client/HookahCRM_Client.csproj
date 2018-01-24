@@ -19,6 +19,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -806,6 +808,7 @@
     <Content Include="bower_components\angular-toastr\CONTRIBUTING.md" />
     <Content Include="bower_components\angular-toastr\LICENSE" />
     <Content Include="bower_components\angular-toastr\README.md" />
+    <Content Include="bower.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
@@ -1199,6 +1202,7 @@
     <Content Include="Content\js\admin.js" />
     <Content Include="Index.html" />
     <Content Include="Scripts\main.js" />
+    <Content Include="shared_components\Chart.js\Chart.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
